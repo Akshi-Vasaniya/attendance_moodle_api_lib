@@ -15,7 +15,7 @@ allprojects {
 
 ```ruby
 dependencies {
-    implementation 'com.github.dhavanikgithub:attendance_moodle_api_lib:1.0.3'
+    implementation 'com.github.dhavanikgithub:attendance_moodle_api_lib:1.0.4'
 }
 ```
 
@@ -43,7 +43,7 @@ Frontend team use only two methods
 #### getMoodleUserID
 ##### parameters
 1. Application Context
-2. TOKEN [String]
+2. CORE_TOKEN [String]
 3. username [String]
 4. call back function [ServerCallBack]
 
@@ -57,7 +57,7 @@ We can use the getMoodleUserID function to authenticate the faculty; if an ID is
 #### getMoodleUserCoursesList
 ##### parameters
 1. Application Context
-2. TOKEN [String]
+2. CORE_TOKEN [String]
 3. username [String]
 4. call back function [ServerCallBack]
 
