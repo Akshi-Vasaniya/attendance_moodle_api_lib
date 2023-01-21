@@ -36,13 +36,12 @@ Frontend team use only two methods
 ##### parameters
 1. Application Context
 2. username [String]
-3. semester [Integer]
-4. call back function [ServerCallBack]
+3. call back function [ServerCallBack]
 
 ##### success response
 - [{"id":"userid"}] 
 
-    Example:- [{"id":10}]
+    Example:- [{"id":"10"}]
 
 We can use the getMoodleUserID function to authenticate the faculty; if an ID is found, the faculty is authorized.
 
@@ -50,18 +49,17 @@ We can use the getMoodleUserID function to authenticate the faculty; if an ID is
 ##### parameters
 1. Application Context
 2. username [String]
-3. semester [Integer]
-4. call back function [ServerCallBack]
+3. call back function [ServerCallBack]
 
 ##### success response
 - [{"course1_name":"course1_id","course2_name":"course2_id",...}] 
 
-    Example:- [{"6CEIT_A-UED":1,"6CEIT-A_CC":2,...}]
+    Example:- [{"6CEIT_A-UED":"1","6CEIT-A_CC":"2",...}]
 
 #### Sample Code How to call function
 ```ruby
-val attRepo = MoodleController.getAttendanceRepository()
-attRepo.getMoodleUserID(this,"username",7,object:ServerCallback{
+val attRepo = MoodleController.getAttendanceRepository(URL,TOKEN)
+attRepo.getMoodleUserID(this,"username",object:ServerCallback{
     override fun onSuccess(result: JSONArray) {
         //is success
     }
