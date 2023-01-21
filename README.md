@@ -42,7 +42,7 @@ Frontend team use only two methods
 ##### success response
 - [{"id":"userid"}] 
 
-Example:- [{"id":10}]
+    Example:- [{"id":10}]
 
 We can use the getMoodleUserID function to authenticate the faculty; if an ID is found, the faculty is authorized.
 
@@ -56,7 +56,7 @@ We can use the getMoodleUserID function to authenticate the faculty; if an ID is
 ##### success response
 - [{"course1_name":"course1_id","course2_name":"course2_id",...}] 
 
-Example:- [{"6CEIT_A-UED":1,"6CEIT-A_CC":2,...}]
+    Example:- [{"6CEIT_A-UED":1,"6CEIT-A_CC":2,...}]
 
 #### Sample Code How to call function
 ```ruby
