@@ -19,7 +19,7 @@ dependencies {
 }
 ```
 
-# Change SDK in build.gradle(app) file
+### Change SDK in build.gradle(app) file
 
 ```ruby
 android {
