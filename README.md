@@ -1,6 +1,6 @@
 ### Step 1. Add the JitPack repository to your build file
 
-Add it in your root build.gradle at the end of repositories:
+Add it in your root settings.gradle at the end of repositories:
 
 ```ruby
 allprojects {
@@ -11,19 +11,27 @@ allprojects {
 }
 ```
 
-### Step 2. Add the dependency
+### Step 2. Add the dependency build.gradle(app) file
 
 ```ruby
 dependencies {
-    implementation 'com.github.dhavanikgithub:attendance_moodle_api_lib:1.0.2.1'
+    implementation 'com.github.dhavanikgithub:attendance_moodle_api_lib:1.0.3'
 }
 ```
 
-# change sdk in gradle file
+# Change SDK in build.gradle(app) file
 
-`targetSdk 33`
+```ruby
+android {
+    compileSdk 33
 
-`compileSdk 33`
+    defaultConfig {
+        ...
+        targetSdk 33
+        ...
+    }
+}
+```
 
 # About Library
 Frontend team use only two methods
