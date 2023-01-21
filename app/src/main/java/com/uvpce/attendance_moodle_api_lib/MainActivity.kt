@@ -20,9 +20,9 @@ class MainActivity : AppCompatActivity() {
         tv1.setMovementMethod(ScrollingMovementMethod())
         val attRepo = MoodleController.getAttendanceRepository("http://202.131.126.214/webservice/rest/server.php","4f3c9f8f0404a7db50825391c295937e")
         btn1.setOnClickListener {
-            attRepo.getMoodleUserID(this,"admin",object:ServerCallback{
+            attRepo.getMoodleUserCoursesList(this,"admin",object:ServerCallback{
                 override fun onSuccess(result: JSONArray) {
-                    tv1.text=result.toString()
+                    tv1.text=result.toString(4)
                 }
 
                 override fun onError(result: String) {
