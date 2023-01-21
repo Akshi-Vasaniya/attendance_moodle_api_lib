@@ -2,20 +2,22 @@
 
 Add it in your root build.gradle at the end of repositories:
 
-`
+```ruby
 allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
 }
-`
+```
 
 ### Step 2. Add the dependency
 
+```ruby
 dependencies {
-`implementation 'com.github.dhavanikgithub:attendance_moodle_api_lib:1.0.1'`
+    implementation 'com.github.dhavanikgithub:attendance_moodle_api_lib:1.0.1'
 }
+```
 
 # change sdk in gradle file
 
@@ -55,3 +57,18 @@ We can use the getMoodleUserID function to authenticate the faculty; if an ID is
 - [{"course1_name":"course1_id","course2_name":"course2_id",...}] 
 
 Example:- [{"6CEIT_A-UED":1,"6CEIT-A_CC":2,...}]
+
+#### Sample Code How to call function
+```ruby
+val attRepo = MoodleController.getAttendanceRepository()
+attRepo.getMoodleUserID(this,"username",7,object:ServerCallback{
+    override fun onSuccess(result: JSONArray) {
+        //is success
+    }
+
+    override fun onError(result: String) {
+        //is error
+    }
+
+})
+```
