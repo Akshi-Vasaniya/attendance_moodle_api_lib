@@ -8,12 +8,12 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.math.BigInteger
 
-class AttendanceRepository():iAttendanceRepository{
-    override fun getMoodleUserID(context: Context, username: String, semester: Int,callback: ServerCallback) {
+class AttendanceRepository(val URL:String, val TOKEN:String):iAttendanceRepository{
+    override fun getMoodleUserID(context: Context, username: String,callback: ServerCallback) {
 
         val mRequestQueue = Volley.newRequestQueue(context)
         val request = object : StringRequest(
-            Method.POST, MoodleAuth.URL[semester-1],
+            Method.POST, URL,
             { response ->
                 try{
                     val outerArray = JSONArray(response)
@@ -37,7 +37,7 @@ class AttendanceRepository():iAttendanceRepository{
         {
             override fun getParams(): Map<String, String> {
                 val params: MutableMap<String, String> = HashMap()
-                params["wstoken"] = MoodleAuth.CORE_TOKEN
+                params["wstoken"] = TOKEN
                 params["wsfunction"] = "core_user_get_users_by_field"
                 params["moodlewsrestformat"] = "json"
                 params["field"] = "username"
@@ -56,14 +56,13 @@ class AttendanceRepository():iAttendanceRepository{
 
     }
 
-    override fun getMoodleUserCoursesList(context: Context, username: String, semester:Int,callback: ServerCallback) {
-
+    override fun getMoodleUserCoursesList(context: Context, username: String,callback: ServerCallback) {
         val mRequestQueue = Volley.newRequestQueue(context)
-        getMoodleUserID(context,username,7,object :ServerCallback{
+        getMoodleUserID(context,username,object :ServerCallback{
             override fun onSuccess(result: JSONArray) {
                 var userid= result.getJSONObject(0).getString("id")
                 val request = object : StringRequest(
-                    Method.POST, MoodleAuth.URL[semester-1],
+                    Method.POST, URL,
                     { response ->
                         try{
                             val newjsonArray = JSONArray()
@@ -88,7 +87,7 @@ class AttendanceRepository():iAttendanceRepository{
                 {
                     override fun getParams(): Map<String, String> {
                         val params: MutableMap<String, String> = HashMap()
-                        params["wstoken"] = MoodleAuth.CORE_TOKEN
+                        params["wstoken"] = TOKEN
                         params["wsfunction"] = "core_enrol_get_users_courses"
                         params["moodlewsrestformat"] = "json"
                         params["userid"] = userid
