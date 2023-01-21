@@ -8,8 +8,8 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.math.BigInteger
 
-class AttendanceRepository(val URL:String, val TOKEN:String):iAttendanceRepository{
-    override fun getMoodleUserID(context: Context, username: String,callback: ServerCallback) {
+class AttendanceRepository(val URL:String):iAttendanceRepository{
+    override fun getMoodleUserID(context: Context, CORE_TOKEN:String, username: String,callback: ServerCallback) {
 
         val mRequestQueue = Volley.newRequestQueue(context)
         val request = object : StringRequest(
@@ -37,7 +37,7 @@ class AttendanceRepository(val URL:String, val TOKEN:String):iAttendanceReposito
         {
             override fun getParams(): Map<String, String> {
                 val params: MutableMap<String, String> = HashMap()
-                params["wstoken"] = TOKEN
+                params["wstoken"] = CORE_TOKEN
                 params["wsfunction"] = "core_user_get_users_by_field"
                 params["moodlewsrestformat"] = "json"
                 params["field"] = "username"
@@ -56,9 +56,9 @@ class AttendanceRepository(val URL:String, val TOKEN:String):iAttendanceReposito
 
     }
 
-    override fun getMoodleUserCoursesList(context: Context, username: String,callback: ServerCallback) {
+    override fun getMoodleUserCoursesList(context: Context, CORE_TOKEN:String, username: String,callback: ServerCallback) {
         val mRequestQueue = Volley.newRequestQueue(context)
-        getMoodleUserID(context,username,object :ServerCallback{
+        getMoodleUserID(context,CORE_TOKEN,username,object :ServerCallback{
             override fun onSuccess(result: JSONArray) {
                 var userid= result.getJSONObject(0).getString("id")
                 val request = object : StringRequest(
@@ -87,7 +87,7 @@ class AttendanceRepository(val URL:String, val TOKEN:String):iAttendanceReposito
                 {
                     override fun getParams(): Map<String, String> {
                         val params: MutableMap<String, String> = HashMap()
-                        params["wstoken"] = TOKEN
+                        params["wstoken"] = CORE_TOKEN
                         params["wsfunction"] = "core_enrol_get_users_courses"
                         params["moodlewsrestformat"] = "json"
                         params["userid"] = userid
