@@ -70,3 +70,10 @@ attRepo.getMoodleUserID(this,"username",object:ServerCallback{
 
 })
 ```
+
+#### Frontend Team Input
+
+- URL
+- TOKEN
+- Username
+- Application Context
