@@ -15,7 +15,7 @@ allprojects {
 
 ```ruby
 dependencies {
-    implementation 'com.github.dhavanikgithub:attendance_moodle_api_lib:1.0.1'
+    implementation 'com.github.dhavanikgithub:attendance_moodle_api_lib:1.0.2'
 }
 ```
 
