@@ -32,7 +32,7 @@ Frontend team use only two methods
 
 #### getMoodleUserID
 ##### parameters
-- Application Contex
+- Application Context
 - username [String]
 - semester [Integer]
 - call back function [ServerCallBack]
@@ -46,7 +46,7 @@ We can use the getMoodleUserID function to authenticate the faculty; if an ID is
 
 #### getMoodleUserCoursesList
 ##### parameters
-- Application Contex
+- Application Context
 - username [String]
 - semester [Integer]
 - call back function [ServerCallBack]
