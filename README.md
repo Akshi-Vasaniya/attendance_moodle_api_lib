@@ -32,10 +32,10 @@ Frontend team use only two methods
 
 #### getMoodleUserID
 ##### parameters
-- Application Context
-- username [String]
-- semester [Integer]
-- call back function [ServerCallBack]
+1. Application Context
+2. username [String]
+3. semester [Integer]
+4. call back function [ServerCallBack]
 
 ##### success response
 - [{"id":"userid"}] 
@@ -46,10 +46,10 @@ We can use the getMoodleUserID function to authenticate the faculty; if an ID is
 
 #### getMoodleUserCoursesList
 ##### parameters
-- Application Context
-- username [String]
-- semester [Integer]
-- call back function [ServerCallBack]
+1. Application Context
+2. username [String]
+3. semester [Integer]
+4. call back function [ServerCallBack]
 
 ##### success response
 - [{"course1_name":"course1_id","course2_name":"course2_id",...}] 
