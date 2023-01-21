@@ -18,9 +18,9 @@ class MainActivity : AppCompatActivity() {
         val btn1 = findViewById<Button>(R.id.btn1)
         val tv1 = findViewById<TextView>(R.id.tv1)
         tv1.setMovementMethod(ScrollingMovementMethod())
-        val attRepo = MoodleController.getAttendanceRepository("http://202.131.126.214/webservice/rest/server.php")
+        val attRepo = MoodleController.getAttendanceRepository("http://202.131.126.214/webservice/rest/server.php","4f3c9f8f0404a7db50825391c295937e","697859a828111d63c3f68543ac986827")
         btn1.setOnClickListener {
-            attRepo.getMoodleUserCoursesList(this,"4f3c9f8f0404a7db50825391c295937e","admin",object:ServerCallback{
+            attRepo.getMoodleUserCoursesList(this,"admin",object:ServerCallback{
                 override fun onSuccess(result: JSONArray) {
                     tv1.text=result.toString(4)
                 }

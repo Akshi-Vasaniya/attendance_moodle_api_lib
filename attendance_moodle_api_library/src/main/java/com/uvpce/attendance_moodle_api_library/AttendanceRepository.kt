@@ -6,10 +6,18 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONArray
 import org.json.JSONObject
-import java.math.BigInteger
 
-class AttendanceRepository(val URL:String):iAttendanceRepository{
-    override fun getMoodleUserID(context: Context, CORE_TOKEN:String, username: String,callback: ServerCallback) {
+/**
+ * You can access all Moodle-related functions by using the AttendanceRepository class.
+ * @param MoodleURL String
+ * @param CORE_TOKEN String
+ * @param ATTENDANCE_TOKEN String
+ *
+ * @return Object
+ */
+class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANCE_TOKEN:String):iAttendanceRepository{
+
+    override fun getMoodleUserID(context: Context, username: String,callback: ServerCallback) {
 
         val mRequestQueue = Volley.newRequestQueue(context)
         val request = object : StringRequest(
@@ -56,9 +64,9 @@ class AttendanceRepository(val URL:String):iAttendanceRepository{
 
     }
 
-    override fun getMoodleUserCoursesList(context: Context, CORE_TOKEN:String, username: String,callback: ServerCallback) {
+    override fun getMoodleUserCoursesList(context: Context, username: String,callback: ServerCallback) {
         val mRequestQueue = Volley.newRequestQueue(context)
-        getMoodleUserID(context,CORE_TOKEN,username,object :ServerCallback{
+        getMoodleUserID(context,username,object :ServerCallback{
             override fun onSuccess(result: JSONArray) {
                 var userid= result.getJSONObject(0).getString("id")
                 val request = object : StringRequest(
