@@ -14,7 +14,7 @@ allprojects {
 ### Step 2. Add the dependency
 
 dependencies {
-`implementation 'com.github.dhavanikgithub:attendance_moodle_api_lib:1.0.0'`
+`implementation 'com.github.dhavanikgithub:attendance_moodle_api_lib:1.0.1'`
 }
 
 # change sdk in gradle file
