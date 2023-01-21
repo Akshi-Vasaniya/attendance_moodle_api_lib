@@ -15,13 +15,15 @@ import org.json.JSONObject
  *
  * @return Object
  */
-class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANCE_TOKEN:String):iAttendanceRepository{
+class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANCE_TOKEN:String, val UPLOAD_FILE_TOKEN:String):iAttendanceRepository{
+
+    fun getMoodleServerUrl():String {return "$URL/webservice/rest/server.php" }
 
     override fun getMoodleUserID(context: Context, username: String,callback: ServerCallback) {
 
         val mRequestQueue = Volley.newRequestQueue(context)
         val request = object : StringRequest(
-            Method.POST, URL,
+            Method.POST, getMoodleServerUrl(),
             { response ->
                 try{
                     val outerArray = JSONArray(response)
@@ -70,7 +72,7 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
             override fun onSuccess(result: JSONArray) {
                 var userid= result.getJSONObject(0).getString("id")
                 val request = object : StringRequest(
-                    Method.POST, URL,
+                    Method.POST, getMoodleServerUrl(),
                     { response ->
                         try{
                             val newjsonArray = JSONArray()
