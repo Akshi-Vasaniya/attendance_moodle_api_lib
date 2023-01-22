@@ -15,11 +15,11 @@ allprojects {
 
 ```ruby
 dependencies {
-    implementation 'com.github.dhavanikgithub:attendance_moodle_api_lib:1.0.4'
+    implementation 'com.github.dhavanikgithub:attendance_moodle_api_lib:1.0.5'
 }
 ```
 
-# Change SDK in build.gradle(app) file
+### Change SDK in build.gradle(app) file
 
 ```ruby
 android {
@@ -43,9 +43,8 @@ Frontend team use only two methods
 #### getMoodleUserID
 ##### parameters
 1. Application Context
-2. CORE_TOKEN [String]
-3. username [String]
-4. call back function [ServerCallBack]
+2. username [String]
+3. call back function [ServerCallBack]
 
 ##### success response
 - [{"id":"userid"}] 
@@ -57,9 +56,8 @@ We can use the getMoodleUserID function to authenticate the faculty; if an ID is
 #### getMoodleUserCoursesList
 ##### parameters
 1. Application Context
-2. CORE_TOKEN [String]
-3. username [String]
-4. call back function [ServerCallBack]
+2. username [String]
+3. call back function [ServerCallBack]
 
 ##### success response
 - [{"course1_name":"course1_id","course2_name":"course2_id",...}] 
@@ -68,8 +66,8 @@ We can use the getMoodleUserID function to authenticate the faculty; if an ID is
 
 #### Sample Code How to call function
 ```ruby
-val attRepo = MoodleController.getAttendanceRepository(URL)
-attRepo.getMoodleUserID(this,TOKEN,"username",object:ServerCallback{
+val attRepo = MoodleController.getAttendanceRepository(URL,CORE_TOKEN,ATTENDANCE_TOKEN)
+attRepo.getMoodleUserID(this,"username",object:ServerCallback{
     override fun onSuccess(result: JSONArray) {
         //is success
     }
@@ -84,6 +82,7 @@ attRepo.getMoodleUserID(this,TOKEN,"username",object:ServerCallback{
 #### Frontend Team Input
 
 - URL
-- TOKEN
+- CORE_TOKEN
+- ATTENDANCE_TOKEN
 - Username
 - Application Context

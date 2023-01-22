@@ -4,13 +4,14 @@ class MoodleController {
     companion object {
 
         /**
-         * @param MOODLEURL String
+         * @param MOODLE_URL String
          * @param CORE_TOKEN String
          * @param ATTENDANCE_TOKEN String
+         * @param UPLOAD_FILE_TOKEN String
          * @return AttendanceRepository Class Object
          */
-        fun getAttendanceRepository(URL:String, CORE_TOKEN: String, ATTENDANCE_TOKEN:String): iAttendanceRepository {
-            return AttendanceRepository(URL,CORE_TOKEN,ATTENDANCE_TOKEN)
+        fun getAttendanceRepository(MOODLE_URL:String, CORE_TOKEN: String, ATTENDANCE_TOKEN:String, UPLOAD_FILE_TOKEN:String): iAttendanceRepository {
+            return AttendanceRepository(MOODLE_URL,CORE_TOKEN,ATTENDANCE_TOKEN,UPLOAD_FILE_TOKEN)
         }
     }
 }
