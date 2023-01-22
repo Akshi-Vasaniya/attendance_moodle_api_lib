@@ -27,14 +27,8 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
             { response ->
                 try{
                     val outerArray = JSONArray(response)
-                    val innerObjects = outerArray.getJSONObject(0)
 
-                    val newjsonArray = JSONArray()
-                    val newjsonObject = JSONObject()
-                    newjsonObject.put("id",innerObjects.getString("id"))
-
-                    newjsonArray.put(newjsonObject)
-                    callback.onSuccess(newjsonArray)
+                    callback.onSuccess(outerArray)
                 }
                 catch (ex:Exception)
                 {
@@ -285,4 +279,67 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
         }
         mRequestQueue.add(request)
     }
+
+//    override fun sendMessangeMoodle(
+//        context: Context,
+//        user_id: String,
+//        faculty_name: String,
+//        faculty_location: String,
+//        session_id: String,
+//        start_time: String,
+//        end_time: String,
+//        callback: ServerCallback
+//    ) {
+//        getMoodleUserID(context,faculty_name,object :ServerCallback{
+//            override fun onSuccess(result: JSONArray) {
+//                val faculty_id = result.getJSONObject(0).getString("id")
+//                val textJsonObject = JSONObject()
+//                textJsonObject.put("faculty_id",faculty_id)
+//                textJsonObject.put("faculty_loc",faculty_location)
+//                textJsonObject.put("session_id",session_id)
+//                textJsonObject.put("start_time",start_time)
+//                textJsonObject.put("end_time",end_time)
+//                val mRequestQueue = Volley.newRequestQueue(context)
+//                val request = object : StringRequest(
+//                    Method.POST, getMoodleServerUrl(),
+//                    { response ->
+//                        try{
+//                            val outerArray = JSONArray(response)
+//                            callback.onSuccess(outerArray)
+//                        }
+//                        catch (ex:Exception)
+//                        {
+//                            callback.onError(response)
+//                        }
+//                    },
+//                    { error ->
+//                        callback.onError(error.toString())
+//                    })
+//                {
+//                    override fun getParams(): Map<String, String> {
+//                        val params: MutableMap<String, String> = HashMap()
+//                        params["wstoken"] = CORE_TOKEN
+//                        params["wsfunction"] = "core_message_send_instant_messages"
+//                        params["moodlewsrestformat"] = "json"
+//                        params["messages[][touserid]"]=user_id
+//                        params["messages[][text]"]="hi"
+//                        return params
+//                    }
+//
+//                    @Throws(AuthFailureError::class)
+//                    override fun getHeaders(): Map<String, String> {
+//                        val params: MutableMap<String, String> = HashMap()
+//                        params["Content-Type"] = "application/x-www-form-urlencoded"
+//                        return params
+//                    }
+//                }
+//                mRequestQueue.add(request)
+//
+//            }
+//
+//            override fun onError(result: String) {
+//                callback.onError(result)
+//            }
+//        })
+//    }
 }

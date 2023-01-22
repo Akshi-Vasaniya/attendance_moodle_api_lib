@@ -33,4 +33,7 @@ interface iAttendanceRepository {
     fun createSessionMoodle(context: Context, course_id:String,attandance_name:String, session_time:String, duration:String, group_id:String, callback: ServerCallback)
 
     fun getCourseGroups(context: Context,course_id: String,callback: ServerCallback)
+
+//    fun sendMessangeMoodle(context: Context, user_id:String, faculty_name:String, faculty_location:String, session_id:String, start_time:String, end_time:String, callback: ServerCallback)
+
 }

@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         "8d29dd97dd7c93b0e3cdd43d4b797c87")
         btn1.setOnClickListener {
             val i = (Date().time / 1000).toInt()
-            attRepo.getCourseGroups(this,"35",object:ServerCallback{
+            attRepo.sendMessangeMoodle(this,"2","admin","123","123","123","123",object:ServerCallback{
                 override fun onSuccess(result: JSONArray) {
                     tv1.text=result.toString(4)
                 }
