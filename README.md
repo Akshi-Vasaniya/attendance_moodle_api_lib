@@ -15,7 +15,7 @@ allprojects {
 
 ```ruby
 dependencies {
-    implementation 'com.github.dhavanikgithub:attendance_moodle_api_lib:1.0.5'
+    implementation 'com.github.dhavanikgithub:attendance_moodle_api_lib:1.1.0'
 }
 ```
 
@@ -66,7 +66,7 @@ We can use the getMoodleUserID function to authenticate the faculty; if an ID is
 
 #### Sample Code How to call function
 ```ruby
-val attRepo = MoodleController.getAttendanceRepository(URL,CORE_TOKEN,ATTENDANCE_TOKEN)
+val attRepo = MoodleController.getAttendanceRepository(URL,CORE_TOKEN,ATTENDANCE_TOKEN,UPLOAD_FILE_TOKEN)
 attRepo.getMoodleUserID(this,"username",object:ServerCallback{
     override fun onSuccess(result: JSONArray) {
         //is success
@@ -84,5 +84,6 @@ attRepo.getMoodleUserID(this,"username",object:ServerCallback{
 - URL
 - CORE_TOKEN
 - ATTENDANCE_TOKEN
+- UPLOAD_FILE_TOKEN
 - Username
 - Application Context
