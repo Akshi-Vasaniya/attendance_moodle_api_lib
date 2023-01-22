@@ -26,4 +26,11 @@ interface iAttendanceRepository {
      * @{{"Course1Name":"Course1ID",....."CourseN":"CourseNID"}}
      */
     fun getMoodleUserCoursesList(context: Context, username:String,callback: ServerCallback)
+
+
+    fun createAttendanceMoodle(context: Context, course_id:String, attandance_name:String, callback: ServerCallback)
+
+    fun createSessionMoodle(context: Context, course_id:String,attandance_name:String, session_time:String, duration:String, group_id:String, callback: ServerCallback)
+
+    fun getCourseGroups(context: Context,course_id: String,callback: ServerCallback)
 }
