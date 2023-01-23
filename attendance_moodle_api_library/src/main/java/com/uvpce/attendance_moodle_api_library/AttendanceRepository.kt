@@ -22,7 +22,7 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
 
     fun getMoodleServerUrl():String {return "$URL/webservice/rest/server.php" }
 
-    override fun getMoodleUserID(context: Context, username: String,callback: ServerCallback) {
+    override fun getUserInfoMoodle(context: Context, username: String,callback: ServerCallback) {
 
         val mRequestQueue = Volley.newRequestQueue(context)
         val request = object : StringRequest(
@@ -63,7 +63,7 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
 
     }
 
-    override fun getMoodleFacultyInfo(
+    override fun getFacultyInfoMoodle(
         context: Context,
         faculty_name: String,
         callback: ServerCallback
@@ -106,9 +106,9 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
         mRequestQueue.add(request)
     }
 
-    override fun getMoodleUserCoursesList(context: Context, username: String,callback: ServerCallback) {
+    override fun getUserCoursesListMoodle(context: Context, username: String,callback: ServerCallback) {
         val mRequestQueue = Volley.newRequestQueue(context)
-        getMoodleUserID(context,username,object :ServerCallback{
+        getUserInfoMoodle(context,username,object :ServerCallback{
             override fun onSuccess(result: JSONArray) {
                 var userid= result.getJSONObject(0).getString("id")
                 val request = object : StringRequest(
@@ -280,7 +280,7 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
 
     }
 
-    override fun getCourseGroups(context: Context, course_id: String, callback: ServerCallback) {
+    override fun getCourseGroupsMoodle(context: Context, course_id: String, callback: ServerCallback) {
         val mRequestQueue = Volley.newRequestQueue(context)
         val request = object : StringRequest(
             Method.POST, getMoodleServerUrl(),
@@ -336,7 +336,7 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
         end_time: String,
         callback: ServerCallback
     ) {
-        getMoodleUserID(context,faculty_name,object :ServerCallback{
+        getUserInfoMoodle(context,faculty_name,object :ServerCallback{
             override fun onSuccess(result: JSONArray) {
                 val faculty_id = result.getJSONObject(0).getString("id")
                 val textJsonObject = JSONObject()
@@ -389,7 +389,7 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
         })
     }
 
-    override fun takeAttendance(
+    override fun takeAttendanceMoodle(
         context: Context,
         session_id: String,
         student_id: String,
@@ -438,7 +438,7 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
         mRequestQueue.add(request)
     }
 
-    override fun getSessionsList(
+    override fun getSessionsListMoodle(
         context: Context,
         attendance_id: String,
         callback: ServerCallback
@@ -538,7 +538,7 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
         queue.add(request)
     }
 
-    override fun updatePicture(
+    override fun updatePictureMoodle(
         context: Context,
         draft_item_id: String,
         user_id: String,
