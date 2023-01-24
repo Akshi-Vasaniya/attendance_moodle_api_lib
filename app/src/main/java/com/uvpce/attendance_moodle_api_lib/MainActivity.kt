@@ -10,8 +10,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.uvpce.attendance_moodle_api_library.MoodleController
+import com.uvpce.attendance_moodle_api_library.ServerCall
 import com.uvpce.attendance_moodle_api_library.ServerCallback
 import org.json.JSONArray
+import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.util.*
 
@@ -33,7 +35,7 @@ class MainActivity : AppCompatActivity() {
 
         btn1.setOnClickListener {
             val i = (Date().time / 1000).toInt()
-//            attRepo.sendMessangeMoodle(this,"2","admin","1245","1234","42121","54541",object:ServerCallback{
+//            attRepo.sendMessangeMoodle(this,"5","null","null","null","null","null","null","null","null",object:ServerCallback{
 //                override fun onSuccess(result: JSONArray) {
 //                    tv1.text=result.toString(4)
 //                }
@@ -43,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 //                }
 //
 //            })
-//            attRepo.getMoodleFacultyInfo(this,"admin", object:ServerCallback{
+//            attRepo.getFacultyInfoMoodle(this,"admin", object:ServerCallback{
 //                override fun onSuccess(result: JSONArray) {
 //                    tv1.text=result.toString(4)
 //                }
@@ -62,7 +64,7 @@ class MainActivity : AppCompatActivity() {
 //                    tv1.text=result
 //                }
 //            })
-//            attRepo.getMoodleUserID(this,"admin",object:ServerCallback{
+//            attRepo.getUserInfoMoodle(this,"admin",object:ServerCallback{
 //                override fun onSuccess(result: JSONArray) {
 //                    tv1.text=result.toString(4)
 //                }
@@ -81,7 +83,7 @@ class MainActivity : AppCompatActivity() {
 //                }
 //
 //            })
-//            attRepo.getSessionsList(this,"52", object:ServerCallback{
+//            attRepo.getSessionsListMoodle(this,"52", object:ServerCallback{
 //                override fun onSuccess(result: JSONArray) {
 //                    tv1.text=result.toString(4)
 //                }
@@ -91,7 +93,7 @@ class MainActivity : AppCompatActivity() {
 //                }
 //
 //            })
-//            attRepo.getCourseGroups(this,"34",object:ServerCallback{
+//            attRepo.getCourseGroupsMoodle(this,"34",object:ServerCallback{
 //                override fun onSuccess(result: JSONArray) {
 //                    tv1.text=result.toString(4)
 //                }
@@ -101,7 +103,7 @@ class MainActivity : AppCompatActivity() {
 //                }
 //
 //            })
-//            attRepo.getMoodleUserCoursesList(this,"admin",object :ServerCallback{
+//            attRepo.getUserCoursesListMoodle(this,"admin",object :ServerCallback{
 //                override fun onError(result: String) {
 //                    tv1.text=result
 //                }
@@ -123,7 +125,7 @@ class MainActivity : AppCompatActivity() {
 //                }
 //            })
 
-//            attRepo.updatePicture(this,"785236211","2",object :ServerCallback{
+//            attRepo.updatePictureMoodle(this,"785236211","2",object :ServerCallback{
 //                override fun onSuccess(result: JSONArray) {
 //                    tv1.text=result.toString(4)
 //                }
@@ -134,7 +136,17 @@ class MainActivity : AppCompatActivity() {
 //
 //            })
 
-//            attRepo.getMessageMoodle(this,"5","conversations","2",object:ServerCallback{
+            attRepo.getMessageMoodle(this,"5","conversations","2",object:ServerCall{
+                override fun onSuccess(result: JSONObject) {
+                    tv1.text=result.toString(4)
+                }
+
+                override fun onError(result: String) {
+                    tv1.text=result
+                }
+
+            })
+//            attRepo.getCategoriesMoodle(this,object :ServerCallback{
 //                override fun onSuccess(result: JSONArray) {
 //                    tv1.text=result.toString(4)
 //                }
@@ -142,7 +154,6 @@ class MainActivity : AppCompatActivity() {
 //                override fun onError(result: String) {
 //                    tv1.text=result
 //                }
-//
 //            })
         }
 

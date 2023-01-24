@@ -1,6 +1,7 @@
 package com.uvpce.attendance_moodle_api_library
 
-import org.json.JSONArray
+
+import org.json.JSONObject
 
 interface ServerCall {
 
@@ -9,7 +10,7 @@ interface ServerCall {
      * @param result JSONArray
      * @return None
      */
-    fun onSuccess(result: String)
+    fun onSuccess(result: JSONObject)
 
     /**
      * Call when response get error.

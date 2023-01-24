@@ -36,7 +36,7 @@ interface iAttendanceRepository {
 
     fun getCourseGroupsMoodle(context: Context,course_id: String,callback: ServerCallback)
 
-    fun sendMessangeMoodle(context: Context, user_id:String, faculty_name:String, faculty_location:String, session_id:String, start_time:String, end_time:String, callback: ServerCallback)
+    fun sendMessangeMoodle(context: Context, user_id:String, attendance_id:String,course_id:String,faculty_id:String, faculty_location:String, group_id:String, session_id:String, start_time_of_attendance:String, end_time_of_attendance:String, callback: ServerCallback)
 
     fun takeAttendanceMoodle(context: Context, session_id:String,student_id:String,taken_by_id:String,status_id:String,status_set:String,callback: ServerCallback)
 
@@ -46,8 +46,8 @@ interface iAttendanceRepository {
 
     fun updatePictureMoodle(context: Context,draft_item_id:String,user_id:String,callback: ServerCallback)
 
-//    fun getMessageMoodle(context: Context,user_id:String,type:String,read:String,callback: ServerCallback)
+    fun getMessageMoodle(context: Context,user_id:String,type:String,read:String,callback: ServerCall)
 
-//    fun getCategoriesMoodle()
+    fun getCategoriesMoodle(context: Context,callback: ServerCallback)
 
 }

@@ -326,67 +326,51 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
         mRequestQueue.add(request)
     }
 
-    override fun sendMessangeMoodle(
-        context: Context,
-        user_id: String,
-        faculty_name: String,
-        faculty_location: String,
-        session_id: String,
-        start_time: String,
-        end_time: String,
-        callback: ServerCallback
-    ) {
-        getUserInfoMoodle(context,faculty_name,object :ServerCallback{
-            override fun onSuccess(result: JSONArray) {
-                val faculty_id = result.getJSONObject(0).getString("id")
-                val textJsonObject = JSONObject()
-                textJsonObject.put("faculty_id",faculty_id)
-                textJsonObject.put("faculty_loc",faculty_location)
-                textJsonObject.put("session_id",session_id)
-                textJsonObject.put("start_time",start_time)
-                textJsonObject.put("end_time",end_time)
-                val mRequestQueue = Volley.newRequestQueue(context)
-                val request = object : StringRequest(
-                    Method.POST, getMoodleServerUrl(),
-                    { response ->
-                        try{
-                            val outerArray = JSONArray(response)
-                            callback.onSuccess(outerArray)
-                        }
-                        catch (ex:Exception)
-                        {
-                            callback.onError(response)
-                        }
-                    },
-                    { error ->
-                        callback.onError(error.toString())
-                    })
-                {
-                    override fun getParams(): Map<String, String> {
-                        val params: MutableMap<String, String> = HashMap()
-                        params["wstoken"] = CORE_TOKEN
-                        params["wsfunction"] = "core_message_send_instant_messages"
-                        params["moodlewsrestformat"] = "json"
-                        params["messages[0][touserid]"]=user_id
-                        params["messages[0][text]"]=textJsonObject.toString()
-                        return params
-                    }
-
-                    @Throws(AuthFailureError::class)
-                    override fun getHeaders(): Map<String, String> {
-                        val params: MutableMap<String, String> = HashMap()
-                        params["Content-Type"] = "application/x-www-form-urlencoded"
-                        return params
-                    }
+    override fun sendMessangeMoodle(context: Context, user_id:String, attendance_id:String,course_id:String,faculty_id:String, faculty_location:String, group_id:String, session_id:String, start_time_of_attendance:String, end_time_of_attendance:String, callback: ServerCallback) {
+        val textJsonObject = JSONObject()
+        textJsonObject.put("faculty_id",faculty_id)
+        textJsonObject.put("faculty_loc",faculty_location)
+        textJsonObject.put("session_id",session_id)
+        textJsonObject.put("attendance_id",attendance_id)
+        textJsonObject.put("course_id",course_id)
+        textJsonObject.put("group_id",group_id)
+        textJsonObject.put("start_time_of_attendance",start_time_of_attendance)
+        textJsonObject.put("end_time_of_attendance",end_time_of_attendance)
+        val mRequestQueue = Volley.newRequestQueue(context)
+        val request = object : StringRequest(
+            Method.POST, getMoodleServerUrl(),
+            { response ->
+                try{
+                    val outerArray = JSONArray(response)
+                    callback.onSuccess(outerArray)
                 }
-                mRequestQueue.add(request)
-
+                catch (ex:Exception)
+                {
+                    callback.onError(response)
+                }
+            },
+            { error ->
+                callback.onError(error.toString())
+            })
+        {
+            override fun getParams(): Map<String, String> {
+                val params: MutableMap<String, String> = HashMap()
+                params["wstoken"] = CORE_TOKEN
+                params["wsfunction"] = "core_message_send_instant_messages"
+                params["moodlewsrestformat"] = "json"
+                params["messages[0][touserid]"]=user_id
+                params["messages[0][text]"]=textJsonObject.toString()
+                return params
             }
 
-            override fun onError(result: String) {
-                callback.onError(result)
+            @Throws(AuthFailureError::class)
+            override fun getHeaders(): Map<String, String> {
+                val params: MutableMap<String, String> = HashMap()
+                params["Content-Type"] = "application/x-www-form-urlencoded"
+                return params
             }
-        })
+        }
+        mRequestQueue.add(request)
     }
 
     override fun takeAttendanceMoodle(
@@ -584,51 +568,88 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
         queue.add(request)
     }
 
-//    override fun getMessageMoodle(
-//        context: Context,
-//        user_id: String,
-//        type: String,
-//        read: String,
-//        callback: ServerCallback
-//    ) {
-//        val queue = Volley.newRequestQueue(context)
-//        val request: StringRequest = object : StringRequest(
-//            Method.POST, getMoodleServerUrl(),
-//            { response ->
-//                try{
-//                    var jsonObject = JSONObject(response)
-//                    var jsonArray = JSONArray()
-//                    jsonArray.put(jsonObject)
-//                    callback.onSuccess(jsonArray)
-//                }
-//                catch (e:Exception)
-//                {
-//                    callback.onError(response)
-//                }
-//
-//            },
-//            { error ->
-//                callback.onError(error.toString())
-//            })
-//        {
-//            override fun getParams(): Map<String, String> {
-//                val params: MutableMap<String, String> = HashMap()
-//                params["wstoken"] = CORE_TOKEN
-//                params["wsfunction"] = "core_message_get_messages"
-//                params["moodlewsrestformat"] = "json"
-//                params["useridto"] = user_id
-//                params["type"] = type
-//                params["read"] = read
-//                return params
-//            }
-//
-//            @Throws(AuthFailureError::class)
-//            override fun getHeaders(): Map<String, String> {
-//                val params: MutableMap<String, String> = HashMap()
-//                params["Content-Type"] = "application/x-www-form-urlencoded"
-//                return params
-//            }
-//        }
-//        queue.add(request)
-//    }
+    override fun getMessageMoodle(
+        context: Context,
+        user_id: String,
+        type: String,
+        read: String,
+        callback: ServerCall
+    ) {
+        val queue = Volley.newRequestQueue(context)
+        val request: StringRequest = object : StringRequest(
+            Method.POST, getMoodleServerUrl(),
+            { response ->
+                try{
+                    var res = JSONArray().put(JSONObject(response))
+                    res = JSONArray(res.getJSONObject(0).getString("messages"))
+                    var msg = res.getJSONObject(0).getString("fullmessage")
+
+                    callback.onSuccess(JSONObject(msg))
+                }
+                catch (e:Exception)
+                {
+                    callback.onError(e.message.toString())
+                }
+
+            },
+            { error ->
+                callback.onError(error.toString())
+            })
+        {
+            override fun getParams(): Map<String, String> {
+                val params: MutableMap<String, String> = HashMap()
+                params["wstoken"] = CORE_TOKEN
+                params["wsfunction"] = "core_message_get_messages"
+                params["moodlewsrestformat"] = "json"
+                params["useridto"] = user_id
+                params["type"] = type
+                params["read"] = read
+                return params
+            }
+
+            @Throws(AuthFailureError::class)
+            override fun getHeaders(): Map<String, String> {
+                val params: MutableMap<String, String> = HashMap()
+                params["Content-Type"] = "application/x-www-form-urlencoded"
+                return params
+            }
+        }
+        queue.add(request)
+    }
+    override fun getCategoriesMoodle(context: Context, callback: ServerCallback)
+    {
+        val queue = Volley.newRequestQueue(context)
+        val request: StringRequest = object : StringRequest(
+            Method.POST, getMoodleServerUrl(),
+            { response ->
+                try{
+                    callback.onSuccess(JSONArray(response))
+                }
+                catch (e:Exception)
+                {
+                    callback.onError(response)
+                }
+
+            },
+            { error ->
+                callback.onError(error.toString())
+            })
+        {
+            override fun getParams(): Map<String, String> {
+                val params: MutableMap<String, String> = HashMap()
+                params["wstoken"] = CORE_TOKEN
+                params["wsfunction"] = "core_course_get_categories"
+                params["moodlewsrestformat"] = "json"
+                return params
+            }
+
+            @Throws(AuthFailureError::class)
+            override fun getHeaders(): Map<String, String> {
+                val params: MutableMap<String, String> = HashMap()
+                params["Content-Type"] = "application/x-www-form-urlencoded"
+                return params
+            }
+        }
+        queue.add(request)
+    }
 }
