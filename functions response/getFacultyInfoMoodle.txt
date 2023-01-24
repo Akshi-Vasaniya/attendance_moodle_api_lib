@@ -1,0 +1,166 @@
+[
+    {
+        "id": 2,
+        "username": "admin",
+        "firstname": "Admin Amit",
+        "lastname": "Prajapati",
+        "fullname": "Admin Amit Prajapati",
+        "email": "agp02@ganpatuniversity.ac.in",
+        "department": "",
+        "firstaccess": 1658725670,
+        "lastaccess": 1674568586,
+        "auth": "manual",
+        "suspended": false,
+        "confirmed": true,
+        "lang": "en",
+        "theme": "",
+        "timezone": "99",
+        "mailformat": 1,
+        "description": "",
+        "descriptionformat": 1,
+        "profileimageurlsmall": "http:\/\/202.131.126.214\/pluginfile.php\/5\/user\/icon\/classic\/f2?rev=21899",
+        "profileimageurl": "http:\/\/202.131.126.214\/pluginfile.php\/5\/user\/icon\/classic\/f1?rev=21899",
+        "preferences": [
+            {
+                "name": "admin_bookmarks",
+                "value": "tool_admin_presets"
+            },
+            {
+                "name": "attendance_take_view_mode",
+                "value": "1"
+            },
+            {
+                "name": "auth_manual_passwordupdatetime",
+                "value": "1672897208"
+            },
+            {
+                "name": "block_myoverview_user_grouping_preference",
+                "value": "all"
+            },
+            {
+                "name": "block_myoverview_user_paging_preference",
+                "value": "0"
+            },
+            {
+                "name": "core_message_migrate_data",
+                "value": "1"
+            },
+            {
+                "name": "core_user_welcome",
+                "value": "1658725845"
+            },
+            {
+                "name": "coursesectionspreferences_13",
+                "value": "{\"contentcollapsed\":[59]}"
+            },
+            {
+                "name": "coursesectionspreferences_2",
+                "value": "{\"contentcollapsed\":[]}"
+            },
+            {
+                "name": "coursesectionspreferences_35",
+                "value": "{\"contentcollapsed\":[129]}"
+            },
+            {
+                "name": "definerole_showadvanced",
+                "value": "1"
+            },
+            {
+                "name": "email_bounce_count",
+                "value": "1"
+            },
+            {
+                "name": "email_send_count",
+                "value": "1"
+            },
+            {
+                "name": "filemanager_recentviewmode",
+                "value": "2"
+            },
+            {
+                "name": "filepicker_recentlicense",
+                "value": "unknown"
+            },
+            {
+                "name": "filepicker_recentrepository",
+                "value": "4"
+            },
+            {
+                "name": "filepicker_recentviewmode",
+                "value": "1"
+            },
+            {
+                "name": "ifirst",
+                "value": ""
+            },
+            {
+                "name": "ilast",
+                "value": ""
+            },
+            {
+                "name": "login_failed_count_since_success",
+                "value": "0"
+            },
+            {
+                "name": "mod_attendance_statusdropdown",
+                "value": "all"
+            },
+            {
+                "name": "question_bank_advanced_search",
+                "value": "0"
+            },
+            {
+                "name": "question_bank_qbshowtext",
+                "value": "0"
+            },
+            {
+                "name": "question_bank_qperpage",
+                "value": "1000"
+            },
+            {
+                "name": "question_bank_recurse",
+                "value": "1"
+            },
+            {
+                "name": "question_bank_showhidden",
+                "value": "1"
+            },
+            {
+                "name": "quiz_overview_slotmarks",
+                "value": "0"
+            },
+            {
+                "name": "quiz_report_pagesize",
+                "value": "100"
+            },
+            {
+                "name": "tool_usertours_tour_completion_time_3",
+                "value": "1658725858"
+            },
+            {
+                "name": "tool_usertours_tour_completion_time_4",
+                "value": "1658725850"
+            },
+            {
+                "name": "userselector_autoselectunique",
+                "value": "0"
+            },
+            {
+                "name": "userselector_optionscollapsed",
+                "value": "0"
+            },
+            {
+                "name": "userselector_preserveselected",
+                "value": "0"
+            },
+            {
+                "name": "userselector_searchanywhere",
+                "value": "0"
+            },
+            {
+                "name": "_lastloaded",
+                "value": 1674581243
+            }
+        ]
+    }
+]

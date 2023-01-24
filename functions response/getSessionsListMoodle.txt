@@ -1,0 +1,402 @@
+[
+    {
+        "id": 432,
+        "attendanceid": 52,
+        "groupid": 0,
+        "sessdate": 1673159956,
+        "duration": 0,
+        "lasttaken": null,
+        "lasttakenby": 0,
+        "timemodified": 1674465127,
+        "description": "",
+        "descriptionformat": 1,
+        "studentscanmark": 0,
+        "absenteereport": 1,
+        "autoassignstatus": 0,
+        "preventsharedip": 0,
+        "preventsharediptime": null,
+        "statusset": 0,
+        "includeqrcode": 0,
+        "courseid": 35,
+        "statuses": [
+            {
+                "id": 209,
+                "attendanceid": 52,
+                "acronym": "P",
+                "description": "Present",
+                "grade": 1,
+                "visible": 1,
+                "deleted": 0,
+                "setnumber": 0
+            },
+            {
+                "id": 210,
+                "attendanceid": 52,
+                "acronym": "A",
+                "description": "Absent",
+                "grade": 0,
+                "visible": 1,
+                "deleted": 0,
+                "setnumber": 0
+            }
+        ],
+        "attendance_log": [],
+        "users": [
+            {
+                "id": 1554,
+                "firstname": "20012531008",
+                "lastname": "Abhishek Gaikwad"
+            },
+            {
+                "id": 1577,
+                "firstname": "20012531022",
+                "lastname": "ALAUKI MANISH PATEL"
+            },
+            {
+                "id": 1588,
+                "firstname": "20012532004",
+                "lastname": "AMAN PATEL"
+            },
+            {
+                "id": 1599,
+                "firstname": "20012011077",
+                "lastname": "ANUJ NARENDRAKUMAR PATEL"
+            },
+            {
+                "id": 1550,
+                "firstname": "20012531001",
+                "lastname": "ARTH I JANI"
+            },
+            {
+                "id": 1572,
+                "firstname": "20012531037",
+                "lastname": "ARUMALLA.PRAVEEN KUMAR"
+            },
+            {
+                "id": 1573,
+                "firstname": "20012531002",
+                "lastname": "AYUSH PIYUSHKUMAR GUPTA"
+            },
+            {
+                "id": 1619,
+                "firstname": "21012022003",
+                "lastname": "BHATLA AYUSHI BHARATKUMAR"
+            },
+            {
+                "id": 1595,
+                "firstname": "20012011014",
+                "lastname": "CHANGELA ARJUNKUMAR VIJAYBHAI"
+            },
+            {
+                "id": 1609,
+                "firstname": "21012012008",
+                "lastname": "CHAUHAN YESHA SUNILBHAI"
+            },
+            {
+                "id": 1552,
+                "firstname": "20012531005",
+                "lastname": "CHINTAKINDI MANEESH KUMAR"
+            },
+            {
+                "id": 1612,
+                "firstname": "20012021004",
+                "lastname": "DEVANSH SHAILESH PATEL"
+            },
+            {
+                "id": 1558,
+                "firstname": "20012531013",
+                "lastname": "DHRUV PRAFULBHAI KHANAPARA"
+            },
+            {
+                "id": 1553,
+                "firstname": "20012531007",
+                "lastname": "DHRUV SHARMA"
+            },
+            {
+                "id": 1568,
+                "firstname": "20012531033",
+                "lastname": "DHRUV SOMANI"
+            },
+            {
+                "id": 1555,
+                "firstname": "20012531009",
+                "lastname": "GAYAM ASHOK REDDY"
+            },
+            {
+                "id": 1551,
+                "firstname": "20012531003",
+                "lastname": "Gayatri Chawada"
+            },
+            {
+                "id": 1613,
+                "firstname": "20012021007",
+                "lastname": "GUPTA SAMARTH RAJESHKUMAR"
+            },
+            {
+                "id": 1581,
+                "firstname": "20012531030",
+                "lastname": "HARSHIL KISHANBHAI SAVAJ"
+            },
+            {
+                "id": 1615,
+                "firstname": "20012021026",
+                "lastname": "HONEY SUBHASHCHANDRA PATEL"
+            },
+            {
+                "id": 1616,
+                "firstname": "20012021027",
+                "lastname": "JAINEEL PATEL"
+            },
+            {
+                "id": 1557,
+                "firstname": "20012531012",
+                "lastname": "JEVIN KARDANI"
+            },
+            {
+                "id": 1620,
+                "firstname": "21012022016",
+                "lastname": "JOSHI DEVERSH GAURANGBHAI"
+            },
+            {
+                "id": 1556,
+                "firstname": "20012531010",
+                "lastname": "KALLAM.VENUGOPAL REDDY"
+            },
+            {
+                "id": 1583,
+                "firstname": "20012531038",
+                "lastname": "Kambala Naga Sai"
+            },
+            {
+                "id": 1560,
+                "firstname": "20012531016",
+                "lastname": "KARUNAKAR KONDE"
+            },
+            {
+                "id": 1574,
+                "firstname": "20012531014",
+                "lastname": "KHUSHI MEHTA"
+            },
+            {
+                "id": 1610,
+                "firstname": "21012012011",
+                "lastname": "KIKANI YASH BHADRIK"
+            },
+            {
+                "id": 1617,
+                "firstname": "20012021034",
+                "lastname": "KIRAN N PATEL"
+            },
+            {
+                "id": 1559,
+                "firstname": "20012531015",
+                "lastname": "KOMMAGONI VAMSHI"
+            },
+            {
+                "id": 1561,
+                "firstname": "20012531017",
+                "lastname": "KURRI. GANESH REDDY"
+            },
+            {
+                "id": 1584,
+                "firstname": "20012531039",
+                "lastname": "Mekala Vamshi Manikantha"
+            },
+            {
+                "id": 1562,
+                "firstname": "20012531018",
+                "lastname": "Mesvaniya Ashishkumar Sanjay"
+            },
+            {
+                "id": 1614,
+                "firstname": "20012021014",
+                "lastname": "MEVADA RAJVI KANUBHAI"
+            },
+            {
+                "id": 1611,
+                "firstname": "21012012016",
+                "lastname": "MODI PAVAN KIRTIKUMAR"
+            },
+            {
+                "id": 1589,
+                "firstname": "21012532001",
+                "lastname": "MODI YASH RAJESHKUMAR"
+            },
+            {
+                "id": 1575,
+                "firstname": "20012531019",
+                "lastname": "NAKUL GUPTA"
+            },
+            {
+                "id": 1598,
+                "firstname": "20012011071",
+                "lastname": "NIHAR JITENDRA PATEL"
+            },
+            {
+                "id": 1579,
+                "firstname": "20012531024",
+                "lastname": "NIRAV"
+            },
+            {
+                "id": 1596,
+                "firstname": "20012011031",
+                "lastname": "NISHANTKUMAR DILIPKUMAR DARJI"
+            },
+            {
+                "id": 1586,
+                "firstname": "20012531041",
+                "lastname": "PARA BRAMHAIAH"
+            },
+            {
+                "id": 1563,
+                "firstname": "20012531020",
+                "lastname": "Pari Ajay"
+            },
+            {
+                "id": 1600,
+                "firstname": "20012011085",
+                "lastname": "PATEL DHRUPAL RAJESHKUMAR"
+            },
+            {
+                "id": 1601,
+                "firstname": "20012011091",
+                "lastname": "PATEL DISHANT PARESHKUMAR"
+            },
+            {
+                "id": 1602,
+                "firstname": "20012011095",
+                "lastname": "PATEL HELLY JAYENDRAKUMAR"
+            },
+            {
+                "id": 1603,
+                "firstname": "20012011100",
+                "lastname": "PATEL JIL MUKESHBHAI"
+            },
+            {
+                "id": 1578,
+                "firstname": "20012531023",
+                "lastname": "PATEL KISHAN PRAVINBHAI"
+            },
+            {
+                "id": 1590,
+                "firstname": "21012532002",
+                "lastname": "PATEL NIDHI RAKESHBHAI"
+            },
+            {
+                "id": 1604,
+                "firstname": "20012011116",
+                "lastname": "PATEL NISHTHA MAHESHKUMAR"
+            },
+            {
+                "id": 1564,
+                "firstname": "20012531025",
+                "lastname": "PATEL RAJANKUMAR RAKESHBHAI"
+            },
+            {
+                "id": 1591,
+                "firstname": "21012532003",
+                "lastname": "PATEL RAJVI ALPESHKUMAR"
+            },
+            {
+                "id": 1565,
+                "firstname": "20012531027",
+                "lastname": "PATEL SHYAM MANUBHAI"
+            },
+            {
+                "id": 1592,
+                "firstname": "21012532004",
+                "lastname": "PATEL VANSHIKA KAMLESHBHAI"
+            },
+            {
+                "id": 1566,
+                "firstname": "20012531028",
+                "lastname": "polisetty karthik"
+            },
+            {
+                "id": 1593,
+                "firstname": "21012532005",
+                "lastname": "RATHOD CHIRAGBHAI VINODBHAI"
+            },
+            {
+                "id": 1618,
+                "firstname": "20012021050",
+                "lastname": "RAVAL NANDANI MAHENDRAKUMAR"
+            },
+            {
+                "id": 1608,
+                "firstname": "20012011184",
+                "lastname": "Rushabh Rupeshbhai Bhatiya"
+            },
+            {
+                "id": 1597,
+                "firstname": "20012011069",
+                "lastname": "SAHIL NAGAR MUKESHBHAI"
+            },
+            {
+                "id": 1585,
+                "firstname": "20012531040",
+                "lastname": "Sanampudi Nagireddy"
+            },
+            {
+                "id": 1580,
+                "firstname": "20012531026",
+                "lastname": "SANKET VIKRAMKUMAR PATEL"
+            },
+            {
+                "id": 1605,
+                "firstname": "20012011154",
+                "lastname": "SATHWARA JAYDEEP JAYESHBHAI"
+            },
+            {
+                "id": 1594,
+                "firstname": "21012532006",
+                "lastname": "SHAH KRUTI RAJIV"
+            },
+            {
+                "id": 1567,
+                "firstname": "20012531032",
+                "lastname": "SMRITI AKANSHA"
+            },
+            {
+                "id": 1606,
+                "firstname": "20012011166",
+                "lastname": "SWAMI DARSHIL CHANDRESHKUMAR"
+            },
+            {
+                "id": 1582,
+                "firstname": "20012531031",
+                "lastname": "TIRTH SHAH"
+            },
+            {
+                "id": 1569,
+                "firstname": "20012531034",
+                "lastname": "VAKACHARLA ANISH"
+            },
+            {
+                "id": 1576,
+                "firstname": "20012531021",
+                "lastname": "VIDHI PARIKH"
+            },
+            {
+                "id": 1607,
+                "firstname": "20012011180",
+                "lastname": "Vikas Mukeshbhai Chudasma"
+            },
+            {
+                "id": 1587,
+                "firstname": "20012531042",
+                "lastname": "VIPPARLA VENKATESWARLU"
+            },
+            {
+                "id": 1570,
+                "firstname": "20012531035",
+                "lastname": "VYAS SHIVAMKUMAR ASHISHBHAI"
+            },
+            {
+                "id": 1571,
+                "firstname": "20012531036",
+                "lastname": "YAGANTI.PEDDABABU"
+            }
+        ]
+    }
+]

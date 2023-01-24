@@ -1,0 +1,10 @@
+{
+    "faculty_id": "null",
+    "faculty_loc": "null",
+    "session_id": "null",
+    "attendance_id": "null",
+    "course_id": "null",
+    "group_id": "null",
+    "start_time_of_attendance": "null",
+    "end_time_of_attendance": "null"
+}

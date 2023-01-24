@@ -1,0 +1,70 @@
+[
+    {
+        "courseid": "24",
+        "coursename": "Custom_Course_For_Test"
+    },
+    {
+        "courseid": "35",
+        "coursename": "6CEIT-A_UED"
+    },
+    {
+        "courseid": "34",
+        "coursename": "6CEIT-A_CC"
+    },
+    {
+        "courseid": "26",
+        "coursename": "6CEIT-A_TOC"
+    },
+    {
+        "courseid": "25",
+        "coursename": "6CEIT-A_AI"
+    },
+    {
+        "courseid": "37",
+        "coursename": "6CEIT-B_UED"
+    },
+    {
+        "courseid": "36",
+        "coursename": "6CEIT-B_CC"
+    },
+    {
+        "courseid": "27",
+        "coursename": "6CEIT-B_TOC"
+    },
+    {
+        "courseid": "28",
+        "coursename": "6CEIT-B_AI"
+    },
+    {
+        "courseid": "39",
+        "coursename": "6CEIT-C_UED"
+    },
+    {
+        "courseid": "38",
+        "coursename": "6CEIT-C_CC"
+    },
+    {
+        "courseid": "30",
+        "coursename": "6CEIT-C_TOC"
+    },
+    {
+        "courseid": "29",
+        "coursename": "6CEIT-C_AI"
+    },
+    {
+        "courseid": "41",
+        "coursename": "6CEIT-D_UED"
+    },
+    {
+        "courseid": "40",
+        "coursename": "6CEIT-D_CC"
+    },
+    {
+        "courseid": "31",
+        "coursename": "6CEIT-D_TOC"
+    },
+    {
+        "courseid": "32",
+        "coursename": "6CEIT-D_AI"
+    }
+]
