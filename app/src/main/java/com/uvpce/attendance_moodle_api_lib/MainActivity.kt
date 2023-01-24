@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
 
         btn1.setOnClickListener {
             val i = (Date().time / 1000).toInt()
+
 //            attRepo.sendMessangeMoodle(this,"5","null","null","null","null","null","null","null","null",object:ServerCallback{
 //                override fun onSuccess(result: JSONArray) {
 //                    tv1.text=result.toString(4)
@@ -73,7 +74,7 @@ class MainActivity : AppCompatActivity() {
 //                    tv1.text=result
 //                }
 //            })
-//            attRepo.createSessionMoodle(this,"25","dk65134", i.toString(),"100000","9",object:ServerCallback{
+//            attRepo.createSessionMoodle(this,"34","dk65134", i.toString(),"100000","30",object:ServerCallback{
 //                override fun onSuccess(result: JSONArray) {
 //                    tv1.text=result.toString(4)
 //                }
@@ -136,16 +137,16 @@ class MainActivity : AppCompatActivity() {
 //
 //            })
 
-            attRepo.getMessageMoodle(this,"5","conversations","2",object:ServerCall{
-                override fun onSuccess(result: JSONObject) {
-                    tv1.text=result.toString(4)
-                }
-
-                override fun onError(result: String) {
-                    tv1.text=result
-                }
-
-            })
+//            attRepo.getMessageMoodle(this,"5","conversations","2",object:ServerCall{
+//                override fun onSuccess(result: JSONObject) {
+//                    tv1.text=result.toString(4)
+//                }
+//
+//                override fun onError(result: String) {
+//                    tv1.text=result
+//                }
+//
+//            })
 //            attRepo.getCategoriesMoodle(this,object :ServerCallback{
 //                override fun onSuccess(result: JSONArray) {
 //                    tv1.text=result.toString(4)

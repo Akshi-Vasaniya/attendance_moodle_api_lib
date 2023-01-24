@@ -32,7 +32,7 @@ interface iAttendanceRepository {
 
     fun createAttendanceMoodle(context: Context, course_id:String, attandance_name:String, callback: ServerCallback)
 
-    fun createSessionMoodle(context: Context, course_id:String,attandance_name:String, session_time:String, duration:String, group_id:String, callback: ServerCallback)
+    fun createSessionMoodle(context: Context, course_id:String,attandance_id:String, session_time:String, duration:String, group_id:String, callback: ServerCallback)
 
     fun getCourseGroupsMoodle(context: Context,course_id: String,callback: ServerCallback)
 

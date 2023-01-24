@@ -213,70 +213,60 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
     override fun createSessionMoodle(
         context: Context,
         course_id:String,
-        attandance_name:String,
+        attandance_id:String,
         session_time:String,
         duration:String,
         group_id:String,
         callback: ServerCallback
     ) {
-        createAttendanceMoodle(context,course_id,attandance_name,object :ServerCallback{
-            override fun onSuccess(result: JSONArray) {
-                var attandance_id = result.getJSONObject(0).getString("id")
-                val mRequestQueue = Volley.newRequestQueue(context)
-                val request = object : StringRequest(
-                    Method.POST, getMoodleServerUrl(),
-                    { response ->
-                        try{
-                            val session_id_pattern = Regex("[0-9]{1,}")
-                            val session_id = session_id_pattern.find(response, 0)
-                            if (session_id != null) {
-                                val arrayJSON = JSONArray()
-                                val objectJSON = JSONObject()
-                                objectJSON.put("id",session_id.value)
-                                arrayJSON.put(objectJSON)
-                                callback.onSuccess(arrayJSON)
-                            }
-                            else{
-                                callback.onError(response)
-                            }
-
-                        }
-                        catch (ex:Exception)
-                        {
-                            callback.onError(response)
-                        }
-                    },
-                    { error ->
-                        callback.onError(error.toString())
-                    })
-                {
-                    override fun getParams(): Map<String, String> {
-                        val params: MutableMap<String, String> = HashMap()
-                        params["wstoken"] = ATTENDANCE_TOKEN
-                        params["wsfunction"] = "mod_attendance_add_session"
-                        params["moodlewsrestformat"] = "json"
-                        params["attendanceid"]= attandance_id
-                        params["sessiontime"] = session_time
-                        params["duration"] = duration
-//                        params["groupid"] = group_id
-                        return params
+        val mRequestQueue = Volley.newRequestQueue(context)
+        val request = object : StringRequest(
+            Method.POST, getMoodleServerUrl(),
+            { response ->
+                try{
+                    val session_id_pattern = Regex("[0-9]{1,}")
+                    val session_id = session_id_pattern.find(response, 0)
+                    if (session_id != null) {
+                        val arrayJSON = JSONArray()
+                        val objectJSON = JSONObject()
+                        objectJSON.put("id",session_id.value)
+                        arrayJSON.put(objectJSON)
+                        callback.onSuccess(arrayJSON)
+                    }
+                    else{
+                        callback.onError(response)
                     }
 
-                    @Throws(AuthFailureError::class)
-                    override fun getHeaders(): Map<String, String> {
-                        val params: MutableMap<String, String> = HashMap()
-                        params["Content-Type"] = "application/x-www-form-urlencoded"
-                        return params
-                    }
                 }
-                mRequestQueue.add(request)
+                catch (ex:Exception)
+                {
+                    callback.onError(response)
+                }
+            },
+            { error ->
+                callback.onError(error.toString())
+            })
+        {
+            override fun getParams(): Map<String, String> {
+                val params: MutableMap<String, String> = HashMap()
+                params["wstoken"] = ATTENDANCE_TOKEN
+                params["wsfunction"] = "mod_attendance_add_session"
+                params["moodlewsrestformat"] = "json"
+                params["attendanceid"]= attandance_id
+                params["sessiontime"] = session_time
+                params["duration"] = duration
+                params["groupid"] = group_id
+                return params
             }
 
-            override fun onError(result: String) {
-                callback.onError(result)
+            @Throws(AuthFailureError::class)
+            override fun getHeaders(): Map<String, String> {
+                val params: MutableMap<String, String> = HashMap()
+                params["Content-Type"] = "application/x-www-form-urlencoded"
+                return params
             }
-
-        })
+        }
+        mRequestQueue.add(request)
 
     }
 
