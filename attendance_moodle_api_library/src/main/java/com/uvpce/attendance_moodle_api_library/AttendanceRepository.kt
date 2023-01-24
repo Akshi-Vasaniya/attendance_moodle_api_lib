@@ -162,7 +162,7 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
         })
     }
 
-    override fun createAttendanceMoodle(context: Context, course_id: String, attandance_name:String, callback: ServerCallback)
+    override fun createAttendanceMoodle(context: Context, course_id: String, attendance_name:String, callback: ServerCallback)
     {
         val mRequestQueue = Volley.newRequestQueue(context)
         val request = object : StringRequest(
@@ -196,7 +196,7 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
                 params["wsfunction"] = "mod_attendance_add_attendance"
                 params["moodlewsrestformat"] = "json"
                 params["courseid"] = course_id;
-                params["name"] = attandance_name;
+                params["name"] = attendance_name;
                 return params
             }
 
@@ -213,7 +213,7 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
     override fun createSessionMoodle(
         context: Context,
         course_id:String,
-        attandance_id:String,
+        attendance_id:String,
         session_time:String,
         duration:String,
         group_id:String,
@@ -252,7 +252,7 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
                 params["wstoken"] = ATTENDANCE_TOKEN
                 params["wsfunction"] = "mod_attendance_add_session"
                 params["moodlewsrestformat"] = "json"
-                params["attendanceid"]= attandance_id
+                params["attendanceid"]= attendance_id
                 params["sessiontime"] = session_time
                 params["duration"] = duration
                 params["groupid"] = group_id
@@ -316,7 +316,7 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
         mRequestQueue.add(request)
     }
 
-    override fun sendMessangeMoodle(context: Context, user_id:String, attendance_id:String,course_id:String,faculty_id:String, faculty_location:String, group_id:String, session_id:String, start_time_of_attendance:String, end_time_of_attendance:String, callback: ServerCallback) {
+    override fun sendMessageMoodle(context: Context, user_id:String, attendance_id:String,course_id:String,faculty_id:String, faculty_location:String, group_id:String, session_id:String, start_time_of_attendance:String, end_time_of_attendance:String, callback: ServerCallback) {
         val textJsonObject = JSONObject()
         textJsonObject.put("faculty_id",faculty_id)
         textJsonObject.put("faculty_loc",faculty_location)

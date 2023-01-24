@@ -1,13 +1,18 @@
 package com.uvpce.attendance_moodle_api_lib
 
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Base64
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.uvpce.attendance_moodle_api_library.MoodleController
 import com.uvpce.attendance_moodle_api_library.ServerCall
@@ -25,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         val btn1 = findViewById<Button>(R.id.btn1)
         val tv1 = findViewById<TextView>(R.id.tv1)
         val iv1 = findViewById<ImageView>(R.id.iv1)
+        tv1.setTextIsSelectable(true)
         tv1.movementMethod = ScrollingMovementMethod()
         val attRepo = MoodleController.
         getAttendanceRepository(
@@ -36,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         btn1.setOnClickListener {
             val i = (Date().time / 1000).toInt()
 
-//            attRepo.sendMessangeMoodle(this,"5","null","null","null","null","null","null","null","null",object:ServerCallback{
+//            attRepo.sendMessageMoodle(this,"5","null","null","null","null","null","null","null","null",object:ServerCallback{
 //                override fun onSuccess(result: JSONArray) {
 //                    tv1.text=result.toString(4)
 //                }
@@ -56,7 +62,7 @@ class MainActivity : AppCompatActivity() {
 //                }
 //
 //            })
-//            attRepo.createAttendanceMoodle(this,"35","dk6513",object : ServerCallback{
+//            attRepo.createAttendanceMoodle(this,"34","dk6514",object : ServerCallback{
 //                override fun onSuccess(result: JSONArray) {
 //                    tv1.text=result.toString(4)
 //                }
@@ -74,7 +80,7 @@ class MainActivity : AppCompatActivity() {
 //                    tv1.text=result
 //                }
 //            })
-//            attRepo.createSessionMoodle(this,"34","dk65134", i.toString(),"100000","30",object:ServerCallback{
+//            attRepo.createSessionMoodle(this,"34","56", i.toString(),"100000","30",object:ServerCallback{
 //                override fun onSuccess(result: JSONArray) {
 //                    tv1.text=result.toString(4)
 //                }
@@ -94,7 +100,7 @@ class MainActivity : AppCompatActivity() {
 //                }
 //
 //            })
-//            attRepo.getCourseGroupsMoodle(this,"34",object:ServerCallback{
+//            attRepo.getCourseGroupsMoodle(this,"35",object:ServerCallback{
 //                override fun onSuccess(result: JSONArray) {
 //                    tv1.text=result.toString(4)
 //                }
@@ -126,7 +132,7 @@ class MainActivity : AppCompatActivity() {
 //                }
 //            })
 
-//            attRepo.updatePictureMoodle(this,"785236211","2",object :ServerCallback{
+//            attRepo.updatePictureMoodle(this,"463630892","2",object :ServerCallback{
 //                override fun onSuccess(result: JSONArray) {
 //                    tv1.text=result.toString(4)
 //                }
@@ -137,7 +143,7 @@ class MainActivity : AppCompatActivity() {
 //
 //            })
 
-//            attRepo.getMessageMoodle(this,"5","conversations","2",object:ServerCall{
+//            attRepo.getMessageMoodle(this,"5","conversations","2",object: ServerCall {
 //                override fun onSuccess(result: JSONObject) {
 //                    tv1.text=result.toString(4)
 //                }
@@ -156,6 +162,20 @@ class MainActivity : AppCompatActivity() {
 //                    tv1.text=result
 //                }
 //            })
+//            attRepo.takeAttendanceMoodle(this,"434","2","5","22","21",object:ServerCallback{
+//                override fun onSuccess(result: JSONArray) {
+//                    tv1.text=result.toString(4)
+//                }
+//
+//                override fun onError(result: String) {
+//                    tv1.text=result
+//                }
+//            })
+        }
+        tv1.setOnClickListener {
+            val cm: ClipboardManager =this.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            cm.setText(tv1.getText())
+            Toast.makeText(this, "Copied to clipboard", Toast.LENGTH_SHORT).show()
         }
 
     }

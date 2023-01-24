@@ -7,7 +7,7 @@ interface ServerCall {
 
     /**
      * Call when response is success.
-     * @param result JSONArray
+     * @param result JSONObject
      * @return None
      */
     fun onSuccess(result: JSONObject)
