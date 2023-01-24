@@ -1,0 +1,18 @@
+[
+    {
+        "groupid": "30",
+        "groupname": "6AB1"
+    },
+    {
+        "groupid": "32",
+        "groupname": "6AB2"
+    },
+    {
+        "groupid": "35",
+        "groupname": "6AB3"
+    },
+    {
+        "groupid": "97",
+        "groupname": "Lecture"
+    }
+]

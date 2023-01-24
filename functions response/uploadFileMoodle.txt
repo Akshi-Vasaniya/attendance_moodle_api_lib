@@ -1,0 +1,11 @@
+[
+    {
+        "contextid": 5,
+        "component": "user",
+        "filearea": "draft",
+        "itemid": 463630892,
+        "filepath": "\/",
+        "filename": "moodleProfile.jpg",
+        "url": "http:\/\/202.131.126.214\/draftfile.php\/5\/user\/draft\/463630892\/moodleProfile.jpg"
+    }
+]

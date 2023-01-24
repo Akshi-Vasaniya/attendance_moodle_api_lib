@@ -1,0 +1,10 @@
+[
+    {
+        "msgid": 341,
+        "text": "<p>{\"faculty_id\":\"null\",\"faculty_loc\":\"null\",\"session_id\":\"null\",\"attendance_id\":\"null\",\"course_id\":\"null\",\"group_id\":\"null\",\"start_time_of_attendance\":\"null\",\"end_time_of_attendance\":\"null\"}<\/p>",
+        "timecreated": 1674581928,
+        "conversationid": 169,
+        "useridfrom": 2,
+        "candeletemessagesforallusers": true
+    }
+]
