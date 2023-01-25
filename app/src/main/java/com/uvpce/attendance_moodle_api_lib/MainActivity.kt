@@ -15,12 +15,14 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.uvpce.attendance_moodle_api_library.MoodleController
+import com.uvpce.attendance_moodle_api_library.QRMessageData
 import com.uvpce.attendance_moodle_api_library.ServerCall
 import com.uvpce.attendance_moodle_api_library.ServerCallback
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.util.*
+import kotlin.Unit as Unit1
 
 
 class MainActivity : AppCompatActivity() {
@@ -38,7 +40,7 @@ class MainActivity : AppCompatActivity() {
             "4f3c9f8f0404a7db50825391c295937e",
             "697859a828111d63c3f68543ac986827",
         "8d29dd97dd7c93b0e3cdd43d4b797c87")
-
+        QRMessageData(0,0,0,0,0,0,0,"null",0,"null", 0,0,0,0,0)
         btn1.setOnClickListener {
             val i = (Date().time / 1000).toInt()
 
@@ -71,15 +73,15 @@ class MainActivity : AppCompatActivity() {
 //                    tv1.text=result
 //                }
 //            })
-            attRepo.getUserInfoMoodle(this,"vrp",object:ServerCallback{
-                override fun onSuccess(result: JSONArray) {
-                    tv1.text=result.toString(4)
-                }
-
-                override fun onError(result: String) {
-                    tv1.text=result
-                }
-            })
+//            attRepo.getUserInfoMoodle(this,"vrp",object:ServerCallback{
+//                override fun onSuccess(result: JSONArray) {
+//                    tv1.text=result.toString(4)
+//                }
+//
+//                override fun onError(result: String) {
+//                    tv1.text=result
+//                }
+//            })
 //            attRepo.createSessionMoodle(this,"34","56", i.toString(),"100000","30",object:ServerCallback{
 //                override fun onSuccess(result: JSONArray) {
 //                    tv1.text=result.toString(4)
@@ -180,6 +182,8 @@ class MainActivity : AppCompatActivity() {
 //                    tv1.text=result
 //                }
 //            })
+
+
         }
         tv1.setOnClickListener {
             val cm: ClipboardManager =this.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager

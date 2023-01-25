@@ -7,7 +7,7 @@ import android.util.Base64
 import java.io.ByteArrayOutputStream
 import java.net.URL
 
-class Utility {
+class util {
     fun convertUrlToBase64(url: String): String {
         val newurl: URL
         val bitmap: Bitmap
