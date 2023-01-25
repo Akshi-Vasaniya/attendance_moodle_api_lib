@@ -173,4 +173,6 @@ interface iAttendanceRepository {
      */
     fun getCategoriesMoodle(context: Context,callback: ServerCallback)
 
+    fun getCohorts(context: Context,callback: ServerCallback)
+
 }

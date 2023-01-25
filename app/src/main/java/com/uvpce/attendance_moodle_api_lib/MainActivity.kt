@@ -71,15 +71,15 @@ class MainActivity : AppCompatActivity() {
 //                    tv1.text=result
 //                }
 //            })
-//            attRepo.getUserInfoMoodle(this,"admin",object:ServerCallback{
-//                override fun onSuccess(result: JSONArray) {
-//                    tv1.text=result.toString(4)
-//                }
-//
-//                override fun onError(result: String) {
-//                    tv1.text=result
-//                }
-//            })
+            attRepo.getUserInfoMoodle(this,"vrp",object:ServerCallback{
+                override fun onSuccess(result: JSONArray) {
+                    tv1.text=result.toString(4)
+                }
+
+                override fun onError(result: String) {
+                    tv1.text=result
+                }
+            })
 //            attRepo.createSessionMoodle(this,"34","56", i.toString(),"100000","30",object:ServerCallback{
 //                override fun onSuccess(result: JSONArray) {
 //                    tv1.text=result.toString(4)
@@ -163,6 +163,15 @@ class MainActivity : AppCompatActivity() {
 //                }
 //            })
 //            attRepo.takeAttendanceMoodle(this,"434","2","5","22","21",object:ServerCallback{
+//                override fun onSuccess(result: JSONArray) {
+//                    tv1.text=result.toString(4)
+//                }
+//
+//                override fun onError(result: String) {
+//                    tv1.text=result
+//                }
+//            })
+//            attRepo.getCohorts(this,object:ServerCallback{
 //                override fun onSuccess(result: JSONArray) {
 //                    tv1.text=result.toString(4)
 //                }

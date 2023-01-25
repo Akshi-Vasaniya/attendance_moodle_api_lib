@@ -642,4 +642,40 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
         }
         queue.add(request)
     }
+
+    override fun getCohorts(context: Context, callback: ServerCallback) {
+        val queue = Volley.newRequestQueue(context)
+        val request: StringRequest = object : StringRequest(
+            Method.POST, getMoodleServerUrl(),
+            { response ->
+                try{
+                    callback.onSuccess(JSONArray(response))
+                }
+                catch (e:Exception)
+                {
+                    callback.onError(response)
+                }
+
+            },
+            { error ->
+                callback.onError(error.toString())
+            })
+        {
+            override fun getParams(): Map<String, String> {
+                val params: MutableMap<String, String> = HashMap()
+                params["wstoken"] = UPLOAD_FILE_TOKEN
+                params["wsfunction"] = "core_cohort_get_cohorts"
+                params["moodlewsrestformat"] = "json"
+                return params
+            }
+
+            @Throws(AuthFailureError::class)
+            override fun getHeaders(): Map<String, String> {
+                val params: MutableMap<String, String> = HashMap()
+                params["Content-Type"] = "application/x-www-form-urlencoded"
+                return params
+            }
+        }
+        queue.add(request)
+    }
 }
