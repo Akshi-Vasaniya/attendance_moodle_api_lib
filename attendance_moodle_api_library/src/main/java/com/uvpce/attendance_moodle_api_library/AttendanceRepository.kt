@@ -227,8 +227,8 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
                         val arrayJSON = JSONArray()
                         val objectJSON = JSONObject()
                         objectJSON.put("id",attendance_id.value)
-                        QRMessageData.attendanceid_by_course[course_id]=attendance_id.value
-                        QRMessageData.attendance_id=attendance_id.value.toInt()
+//                        QRMessageData.attendanceid_by_course[course_id]=attendance_id.value
+//                        QRMessageData.attendance_id=attendance_id.value.toInt()
                         arrayJSON.put(objectJSON)
 
                         callback.onSuccess(arrayJSON)
@@ -286,32 +286,33 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
                         val objectJSON = JSONObject()
                         objectJSON.put("id",session_id.value)
                         arrayJSON.put(objectJSON)
-                        getSessionsListMoodle(context,attendance_id,object:ServerCallback{
-                            override fun onError(result: String) {
-                                callback.onError(result)
-                            }
-
-                            override fun onSuccess(result: JSONArray) {
-                                for(i in 0 until result.length())
-                                {
-                                    val jsonObj = result.getJSONObject(i)
-                                    if(jsonObj.getString("id")==session_id.value)
-                                    {
-                                        val sessend=(jsonObj.getString("sessdate").toLong() + jsonObj.getString("duration").toLong())
-
-                                        var tempJSONObj = JSONObject()
-                                        tempJSONObj.put("session_id",session_id.value)
-                                        tempJSONObj.put("session_start_time",session_time)
-                                        tempJSONObj.put("session_end_time",sessend*1000)
-                                        tempJSONObj.put("session_duration",duration.toLong()/60)
-                                        QRMessageData.sessionData.put(tempJSONObj)
-                                        break
-                                    }
-                                }
-                                callback.onSuccess(arrayJSON)
-
-                            }
-                        })
+                        callback.onSuccess(arrayJSON)
+//                        getSessionsListMoodle(context,attendance_id,object:ServerCallback{
+//                            override fun onError(result: String) {
+//                                callback.onError(result)
+//                            }
+//
+//                            override fun onSuccess(result: JSONArray) {
+//                                for(i in 0 until result.length())
+//                                {
+//                                    val jsonObj = result.getJSONObject(i)
+//                                    if(jsonObj.getString("id")==session_id.value)
+//                                    {
+//                                        val sessend=(jsonObj.getString("sessdate").toLong() + jsonObj.getString("duration").toLong())
+//
+//                                        var tempJSONObj = JSONObject()
+//                                        tempJSONObj.put("session_id",session_id.value)
+//                                        tempJSONObj.put("session_start_time",session_time)
+//                                        tempJSONObj.put("session_end_time",sessend*1000)
+//                                        tempJSONObj.put("session_duration",duration.toLong()/60)
+//                                        QRMessageData.sessionData.put(tempJSONObj)
+//                                        break
+//                                    }
+//                                }
+//                                callback.onSuccess(arrayJSON)
+//
+//                            }
+//                        })
 
                     }
                     else{
