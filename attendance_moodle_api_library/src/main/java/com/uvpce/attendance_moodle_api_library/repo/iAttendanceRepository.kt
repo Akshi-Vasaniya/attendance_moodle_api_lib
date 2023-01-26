@@ -206,4 +206,8 @@ interface iAttendanceRepository {
 
     fun getTeacherUserByCourseGroupMoodle(courseid: String, groupid:String, roleid:String, onSuccess:(JSONArray)->Unit,
                                           onError:(String)->Unit)
+    fun login(recievedMoodleUsername:String,
+              recievedMoodlePassword:String,
+              onSuccess:(Boolean)->Unit,
+              onError:(String)->Unit)
 }

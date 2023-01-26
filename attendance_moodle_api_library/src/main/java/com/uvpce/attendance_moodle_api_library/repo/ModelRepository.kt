@@ -16,7 +16,6 @@ class ModelRepository(
     private val attRepo = AttendanceRepository(context,moodleUrl, ClientAPI.coreToken,ClientAPI.attendanceToken,ClientAPI.fileUploadToken)
     private val TAG = "ModelRepository"
     fun isStudentRegisterForFace(enrollmentNo:String, onReceive:(Boolean)->Unit, onError:(String)->Unit){
-
         attRepo.getUserInfoMoodle(enrollmentNo, onSuccess =  { result->
                 try {
                     var fetchedProfileURL = ""
@@ -218,6 +217,8 @@ class ModelRepository(
             }
         )
     }
+
+
     fun getFacultyInformation(userName: String, onReceiveData: (List<MoodleUserInfo>) -> Unit, onError: (String) -> Unit){
         attRepo.getFacultyInfoMoodle(userName,onError={result->
                 onError(result)
@@ -305,5 +306,22 @@ class ModelRepository(
         onError={
             onError(it)
         })
+    }
+    fun login(recievedMoodleUsername:String,
+              recievedmoodlePassword:String,
+              onSuccess:(Boolean)->Unit,
+              onError:(String)->Unit){
+        try{
+            attRepo.login(recievedMoodleUsername,recievedmoodlePassword,
+            onSuccess={
+                onSuccess(it)
+            },onError={
+                onError(it)
+                })
+
+        }catch (e:Exception){
+            onError("Error Login:$e")
+            Log.e(TAG, "login: $e", e)
+        }
     }
 }

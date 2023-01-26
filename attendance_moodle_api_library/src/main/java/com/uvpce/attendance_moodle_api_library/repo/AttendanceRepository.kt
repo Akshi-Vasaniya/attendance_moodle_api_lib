@@ -6,12 +6,13 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.StrictMode
 import android.util.Base64
+import android.util.Log
 import com.android.volley.AuthFailureError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.ByteArrayOutputStream
+import java.io.*
 import java.net.URL
 
 /**
@@ -29,8 +30,12 @@ class AttendanceRepository(
     val ATTENDANCE_TOKEN:String,
     val UPLOAD_FILE_TOKEN:String): iAttendanceRepository {
 
-
+    private val TAG = "AttendanceRepository"
     fun getMoodleServerUrl():String {return "$MoodleURL/webservice/rest/server.php" }
+    private fun getTokenUrl():String
+    {
+        return "$MoodleURL/login/token.php"
+    }
 
     override fun getUserInfoMoodle(username: String,onSuccess:(JSONArray)->Unit,
                                    onError:(String)->Unit) {
@@ -960,5 +965,57 @@ class AttendanceRepository(
         }
         mRequestQueue.add(request)
 
+    }
+    override fun login(recievedMoodleUsername:String,
+                       recievedMoodlePassword:String,
+                       onSuccess:(Boolean)->Unit,
+                       onError:(String)->Unit){
+
+        val url1 = "${getTokenUrl()}?username=${recievedMoodleUsername}&password=${recievedMoodlePassword}&service=moodle_mobile_app"
+        //val url = URL(url1)
+        val mRequestQueue = Volley.newRequestQueue(context)
+        val request = object : StringRequest(
+            Method.POST, url1,{ response ->
+                try{
+                    Log.i(TAG, "login: ${response.toString()}")
+                    if(response.toString().indexOf("token") != -1){
+                        onSuccess(true)
+                    }
+                    else
+                        onSuccess(false)
+                }
+                catch (ex:Exception)
+                {
+                    onError(response)
+                }
+            },
+            { error ->
+                onError(error.toString())
+            }){
+
+        }
+        mRequestQueue.add(request)
+        /*val con = url.openConnection() as HttpURLConnection
+        con.requestMethod = "POST"
+        con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
+        con.doOutput = true
+        con.doInput = true
+        val wr = DataOutputStream(con.outputStream)
+        wr.flush()
+        wr.close()
+        val `is`: InputStream = con.inputStream
+        val rd = BufferedReader(InputStreamReader(`is`))
+        var line: String?
+        val response = StringBuilder()
+        while (rd.readLine().also { line = it } != null) {
+            response.append(line)
+            response.append('\r')
+        }
+        rd.close()
+        val res = response.toString()
+        if(res.indexOf("token") != -1){
+            return true
+        }
+        return false*/
     }
 }

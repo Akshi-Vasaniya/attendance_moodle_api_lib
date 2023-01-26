@@ -34,10 +34,19 @@ class MainActivity : AppCompatActivity() {
         tv1.setTextIsSelectable(true)
         tv1.movementMethod = ScrollingMovementMethod()
 
+        val modelRepo = MoodleConfig.getModelRepo(this)
 
         btn1.setOnClickListener {
             val i = (Date().time / 1000).toInt()
-
+        modelRepo.login("20012011061","abc",
+        onSuccess = {
+            if(it)
+                tv1.text = "login success"
+            else
+                tv1.text = "invalid login"
+        }, onError = {
+                tv1.text = it
+            })
 //            val attRepo = AttendanceRepository(this,
 //                "http://202.131.126.214",
 //                "4f3c9f8f0404a7db50825391c295937e",
