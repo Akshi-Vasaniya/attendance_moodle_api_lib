@@ -1,4 +1,4 @@
-package com.example.guniattendancefaculty.moodle
+package com.uvpce.attendance_moodle_api_library.util
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory

@@ -1,5 +1,8 @@
 package com.uvpce.attendance_moodle_api_library
 
+import com.uvpce.attendance_moodle_api_library.repo.AttendanceRepository
+import com.uvpce.attendance_moodle_api_library.repo.iAttendanceRepository
+
 class MoodleController {
     companion object {
 

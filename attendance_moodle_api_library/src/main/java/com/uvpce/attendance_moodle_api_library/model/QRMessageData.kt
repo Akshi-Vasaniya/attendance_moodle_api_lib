@@ -1,4 +1,4 @@
-package com.uvpce.attendance_moodle_api_library.moodle.model
+package com.uvpce.attendance_moodle_api_library.model
 
 import org.json.JSONArray
 

@@ -1,4 +1,4 @@
-package com.uvpce.attendance_moodle_api_library
+package com.uvpce.attendance_moodle_api_library.repo
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -9,7 +9,7 @@ import android.util.Base64
 import com.android.volley.AuthFailureError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.uvpce.attendance_moodle_api_library.moodle.model.QRMessageData
+import com.uvpce.attendance_moodle_api_library.model.QRMessageData
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -23,12 +23,17 @@ import java.net.URL
  * @param UPLOAD_FILE_TOKEN String
  * @return Object
  */
-class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANCE_TOKEN:String, val UPLOAD_FILE_TOKEN:String):iAttendanceRepository{
+class AttendanceRepository(
+    private val MoodleURL:String,
+    val CORE_TOKEN: String,
+    val ATTENDANCE_TOKEN:String,
+    val UPLOAD_FILE_TOKEN:String): iAttendanceRepository {
 
 
-    fun getMoodleServerUrl():String {return "$URL/webservice/rest/server.php" }
+    fun getMoodleServerUrl():String {return "$MoodleURL/webservice/rest/server.php" }
 
-    override fun getUserInfoMoodle(context: Context, username: String,callback: ServerCallback) {
+    override fun getUserInfoMoodle(context: Context, username: String,onSuccess:(JSONArray)->Unit,
+                                   onError:(String)->Unit) {
 
         val mRequestQueue = Volley.newRequestQueue(context)
         val request = object : StringRequest(
@@ -37,15 +42,15 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
                 try{
                     val outerArray = JSONArray(response)
 
-                    callback.onSuccess(outerArray)
+                    onSuccess(outerArray)
                 }
                 catch (ex:Exception)
                 {
-                    callback.onError(response)
+                    onError(response)
                 }
             },
             { error ->
-                callback.onError(error.toString())
+                onError(error.toString())
             })
         {
             override fun getParams(): Map<String, String> {
@@ -73,7 +78,8 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
         context: Context,
         field: String,
         value: ArrayList<String>,
-        callback: ServerCallback
+        onSuccess:(JSONArray)->Unit,
+        onError:(String)->Unit
     ) {
         val mRequestQueue = Volley.newRequestQueue(context)
         val request = object : StringRequest(
@@ -82,15 +88,15 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
                 try{
                     val outerArray = JSONArray(response)
 
-                    callback.onSuccess(outerArray)
+                    onSuccess(outerArray)
                 }
                 catch (ex:Exception)
                 {
-                    callback.onError(response)
+                    onError(response)
                 }
             },
             { error ->
-                callback.onError(error.toString())
+                onError(error.toString())
             })
         {
             override fun getParams(): Map<String, String> {
@@ -118,7 +124,8 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
     override fun getFacultyInfoMoodle(
         context: Context,
         faculty_name: String,
-        callback: ServerCallback
+        onSuccess:(JSONArray)->Unit,
+        onError:(String)->Unit
     ) {
         val mRequestQueue = Volley.newRequestQueue(context)
         val request = object : StringRequest(
@@ -127,15 +134,15 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
                 try{
                     val outerArray = JSONArray(response)
 
-                    callback.onSuccess(outerArray)
+                    onSuccess(outerArray)
                 }
                 catch (ex:Exception)
                 {
-                    callback.onError(response)
+                    onError(response)
                 }
             },
             { error ->
-                callback.onError(error.toString())
+                onError(error.toString())
             })
         {
             override fun getParams(): Map<String, String> {
@@ -158,11 +165,11 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
         mRequestQueue.add(request)
     }
 
-    override fun getUserCoursesListMoodle(context: Context, username: String,callback: ServerCallback) {
+    override fun getUserCoursesListMoodle(context: Context, username: String,onSuccess:(JSONArray)->Unit,
+                                          onError:(String)->Unit) {
         val mRequestQueue = Volley.newRequestQueue(context)
-        getUserInfoMoodle(context,username,object :ServerCallback{
-            override fun onSuccess(result: JSONArray) {
-                var userid= result.getJSONObject(0).getString("id")
+        getUserInfoMoodle(context,username,onSuccess= {result->
+                val userid= result.getJSONObject(0).getString("id")
                 val request = object : StringRequest(
                     Method.POST, getMoodleServerUrl(),
                     { response ->
@@ -177,16 +184,16 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
                                 newjsonObject.put("coursename",jsonobject.getString("fullname"))
                                 newjsonArray.put(newjsonObject)
                             }
-                            callback.onSuccess(newjsonArray)
+                            onSuccess(newjsonArray)
                         }
                         catch (ex:Exception)
                         {
-                            callback.onError(response)
+                            onError(response)
                         }
 
                     },
                     { error ->
-                        callback.onError(error.toString())
+                        onError(error.toString())
                     })
                 {
                     override fun getParams(): Map<String, String> {
@@ -206,43 +213,46 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
                     }
                 }
                 mRequestQueue.add(request)
+            },
+            onError={result ->
+                onError(result)
             }
-
-            override fun onError(result: String) {
-                callback.onError(result)
-            }
-        })
+        )
     }
 
-    override fun createAttendanceMoodle(context: Context, course_id: String, attendance_name:String, callback: ServerCallback)
+    override fun createAttendanceMoodle(context: Context,
+                                        course_id: String,
+                                        attendance_name:String,
+                                        onSuccess:(JSONArray)->Unit,
+                                        onError:(String)->Unit)
     {
         val mRequestQueue = Volley.newRequestQueue(context)
         val request = object : StringRequest(
             Method.POST, getMoodleServerUrl(),
             { response ->
                 try{
-                    val attendance_id_pattern = Regex("[0-9]{1,}")
-                    val attendance_id = attendance_id_pattern.find(response, 0)
-                    if (attendance_id != null) {
+                    val attendanceIdPattern = Regex("\\d+")
+                    val attendanceId = attendanceIdPattern.find(response, 0)
+                    if (attendanceId != null) {
                         val arrayJSON = JSONArray()
                         val objectJSON = JSONObject()
-                        objectJSON.put("id",attendance_id.value)
-                        QRMessageData.attendanceid_by_course[course_id]=attendance_id.value
-                        QRMessageData.attendance_id=attendance_id.value.toInt()
+                        objectJSON.put("id",attendanceId.value)
+                        QRMessageData.attendanceid_by_course[course_id]=attendanceId.value
+                        QRMessageData.attendance_id=attendanceId.value.toInt()
                         arrayJSON.put(objectJSON)
 
-                        callback.onSuccess(arrayJSON)
+                        onSuccess(arrayJSON)
                     } else{
-                        callback.onError(response)
+                        onError(response)
                     }
                 }
                 catch (ex:Exception)
                 {
-                    callback.onError(response)
+                    onError(response)
                 }
             },
             { error ->
-                callback.onError(error.toString())
+                onError(error.toString())
             })
         {
             override fun getParams(): Map<String, String> {
@@ -250,8 +260,8 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
                 params["wstoken"] = ATTENDANCE_TOKEN
                 params["wsfunction"] = "mod_attendance_add_attendance"
                 params["moodlewsrestformat"] = "json"
-                params["courseid"] = course_id;
-                params["name"] = attendance_name;
+                params["courseid"] = course_id
+                params["name"] = attendance_name
                 return params
             }
 
@@ -272,35 +282,34 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
         session_time:String,
         duration:String,
         group_id:String,
-        callback: ServerCallback
+        onSuccess:(JSONArray)->Unit,
+        onError:(String)->Unit
     ) {
         val mRequestQueue = Volley.newRequestQueue(context)
         val request = object : StringRequest(
             Method.POST, getMoodleServerUrl(),
             { response ->
                 try{
-                    val session_id_pattern = Regex("[0-9]{1,}")
-                    val session_id = session_id_pattern.find(response, 0)
-                    if (session_id != null) {
+                    val sessionIdPattern = Regex("\\d+")
+                    val sessionId = sessionIdPattern.find(response, 0)
+                    if (sessionId != null) {
                         val arrayJSON = JSONArray()
                         val objectJSON = JSONObject()
-                        objectJSON.put("id",session_id.value)
+                        objectJSON.put("id",sessionId.value)
                         arrayJSON.put(objectJSON)
-                        getSessionsListMoodle(context,attendance_id,object:ServerCallback{
-                            override fun onError(result: String) {
-                                callback.onError(result)
-                            }
-
-                            override fun onSuccess(result: JSONArray) {
+                        getSessionsListMoodle(context,attendance_id,
+                            onError= { result ->
+                                onError(result)
+                            },onSuccess={result->
                                 for(i in 0 until result.length())
                                 {
                                     val jsonObj = result.getJSONObject(i)
-                                    if(jsonObj.getString("id")==session_id.value)
+                                    if(jsonObj.getString("id")==sessionId.value)
                                     {
                                         val sessend=(jsonObj.getString("sessdate").toLong() + jsonObj.getString("duration").toLong())
 
-                                        var tempJSONObj = JSONObject()
-                                        tempJSONObj.put("session_id",session_id.value)
+                                        val tempJSONObj = JSONObject()
+                                        tempJSONObj.put("session_id",sessionId.value)
                                         tempJSONObj.put("session_start_time",session_time)
                                         tempJSONObj.put("session_end_time",sessend*1000)
                                         tempJSONObj.put("session_duration",duration.toLong()/60)
@@ -308,24 +317,24 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
                                         break
                                     }
                                 }
-                                callback.onSuccess(arrayJSON)
+                                onSuccess(arrayJSON)
 
                             }
-                        })
+                        )
 
                     }
                     else{
-                        callback.onError(response)
+                        onError(response)
                     }
 
                 }
                 catch (ex:Exception)
                 {
-                    callback.onError(response)
+                    onError(response)
                 }
             },
             { error ->
-                callback.onError(error.toString())
+                onError(error.toString())
             })
         {
             override fun getParams(): Map<String, String> {
@@ -351,7 +360,8 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
 
     }
 
-    override fun getCourseGroupsMoodle(context: Context, course_id: String, callback: ServerCallback) {
+    override fun getCourseGroupsMoodle(context: Context, course_id: String, onSuccess:(JSONArray)->Unit,
+                                       onError:(String)->Unit) {
         val mRequestQueue = Volley.newRequestQueue(context)
         val request = object : StringRequest(
             Method.POST, getMoodleServerUrl(),
@@ -367,15 +377,15 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
                         objectJSON.put("groupname",jsonobject.getString("name"))
                         newArryJSON.put(objectJSON)
                     }
-                    callback.onSuccess(newArryJSON)
+                    onSuccess(newArryJSON)
                 }
                 catch (ex:Exception)
                 {
-                    callback.onError(response)
+                    onError(response)
                 }
             },
             { error ->
-                callback.onError(error.toString())
+                onError(error.toString())
             })
         {
             override fun getParams(): Map<String, String> {
@@ -397,7 +407,13 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
         mRequestQueue.add(request)
     }
 
-    override fun sendMessageMoodle(context: Context, user_id:String, attendance_id:String,course_id:String,faculty_id:String, faculty_location:String, group_id:String, session_id:String, start_time_of_attendance:String, end_time_of_attendance:String, callback: ServerCallback) {
+    override fun sendMessageMoodle(context: Context, user_id:String, attendance_id:String,
+                                   course_id:String,faculty_id:String, faculty_location:String,
+                                   group_id:String, session_id:String,
+                                   start_time_of_attendance:String,
+                                   end_time_of_attendance:String,
+                                   onSuccess:(JSONArray)->Unit,
+                                   onError:(String)->Unit) {
         val textJsonObject = JSONObject()
         textJsonObject.put("faculty_id",faculty_id)
         textJsonObject.put("faculty_loc",faculty_location)
@@ -413,15 +429,15 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
             { response ->
                 try{
                     val outerArray = JSONArray(response)
-                    callback.onSuccess(outerArray)
+                    onSuccess(outerArray)
                 }
                 catch (ex:Exception)
                 {
-                    callback.onError(response)
+                    onError(response)
                 }
             },
             { error ->
-                callback.onError(error.toString())
+                onError(error.toString())
             })
         {
             override fun getParams(): Map<String, String> {
@@ -451,7 +467,8 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
         taken_by_id: String,
         status_id: String,
         status_set: String,
-        callback: ServerCallback
+        onSuccess:(JSONArray)->Unit,
+        onError:(String)->Unit
     ) {
         val mRequestQueue = Volley.newRequestQueue(context)
         val request = object : StringRequest(
@@ -459,15 +476,15 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
             { response ->
                 try{
                     val outerArray = JSONArray(response)
-                    callback.onSuccess(outerArray)
+                    onSuccess(outerArray)
                 }
                 catch (ex:Exception)
                 {
-                    callback.onError(response)
+                    onError(response)
                 }
             },
             { error ->
-                callback.onError(error.toString())
+                onError(error.toString())
             })
         {
             override fun getParams(): Map<String, String> {
@@ -496,7 +513,8 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
     override fun getSessionsListMoodle(
         context: Context,
         attendance_id: String,
-        callback: ServerCallback
+        onSuccess:(JSONArray)->Unit,
+        onError:(String)->Unit
     ) {
         val mRequestQueue = Volley.newRequestQueue(context)
         val request = object : StringRequest(
@@ -505,15 +523,15 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
                 try{
                     val outerArray = JSONArray(response)
 
-                    callback.onSuccess(outerArray)
+                    onSuccess(outerArray)
                 }
                 catch (ex:Exception)
                 {
-                    callback.onError(response)
+                    onError(response)
                 }
             },
             { error ->
-                callback.onError(error.toString())
+                onError(error.toString())
             })
         {
             override fun getParams(): Map<String, String> {
@@ -545,26 +563,27 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
         file_content: String,
         context_level: String,
         instanceid: String,
-        callback: ServerCallback
+        onSuccess:(JSONArray)->Unit,
+        onError:(String)->Unit
     ) {
         val queue = Volley.newRequestQueue(context)
         val request: StringRequest = object : StringRequest(
             Method.POST, getMoodleServerUrl(),
             { response ->
                 try{
-                    var jsonObject = JSONObject(response)
-                    var jsonArray = JSONArray()
+                    val jsonObject = JSONObject(response)
+                    val jsonArray = JSONArray()
                     jsonArray.put(jsonObject)
-                    callback.onSuccess(jsonArray)
+                    onSuccess(jsonArray)
                 }
                 catch (e:Exception)
                 {
-                    callback.onError(response)
+                    onError(response)
                 }
 
             },
             { error ->
-                callback.onError(error.toString())
+                onError(error.toString())
             })
         {
             override fun getParams(): Map<String, String> {
@@ -597,26 +616,27 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
         context: Context,
         draft_item_id: String,
         user_id: String,
-        callback: ServerCallback
+        onSuccess:(JSONArray)->Unit,
+        onError:(String)->Unit
     ) {
         val queue = Volley.newRequestQueue(context)
         val request: StringRequest = object : StringRequest(
             Method.POST, getMoodleServerUrl(),
             { response ->
                 try{
-                    var jsonObject = JSONObject(response)
-                    var jsonArray = JSONArray()
+                    val jsonObject = JSONObject(response)
+                    val jsonArray = JSONArray()
                     jsonArray.put(jsonObject)
-                    callback.onSuccess(jsonArray)
+                    onSuccess(jsonArray)
                 }
                 catch (e:Exception)
                 {
-                    callback.onError(response)
+                    onError(response)
                 }
 
             },
             { error ->
-                callback.onError(error.toString())
+                onError(error.toString())
             })
         {
             override fun getParams(): Map<String, String> {
@@ -644,7 +664,8 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
         user_id: String,
         type: String,
         read: String,
-        callback: ServerCall
+        onSuccess:(JSONObject)->Unit,
+        onError:(String)->Unit
     ) {
         val queue = Volley.newRequestQueue(context)
         val request: StringRequest = object : StringRequest(
@@ -653,18 +674,18 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
                 try{
                     var res = JSONArray().put(JSONObject(response))
                     res = JSONArray(res.getJSONObject(0).getString("messages"))
-                    var msg = res.getJSONObject(0).getString("fullmessage")
+                    val msg = res.getJSONObject(0).getString("fullmessage")
 
-                    callback.onSuccess(JSONObject(msg))
+                    onSuccess(JSONObject(msg))
                 }
                 catch (e:Exception)
                 {
-                    callback.onError(e.message.toString())
+                    onError(e.message.toString())
                 }
 
             },
             { error ->
-                callback.onError(error.toString())
+                onError(error.toString())
             })
         {
             override fun getParams(): Map<String, String> {
@@ -687,23 +708,24 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
         }
         queue.add(request)
     }
-    override fun getCategoriesMoodle(context: Context, callback: ServerCallback)
+    override fun getCategoriesMoodle(context: Context, onSuccess:(JSONArray)->Unit,
+                                     onError:(String)->Unit)
     {
         val queue = Volley.newRequestQueue(context)
         val request: StringRequest = object : StringRequest(
             Method.POST, getMoodleServerUrl(),
             { response ->
                 try{
-                    callback.onSuccess(JSONArray(response))
+                    onSuccess(JSONArray(response))
                 }
                 catch (e:Exception)
                 {
-                    callback.onError(response)
+                    onError(response)
                 }
 
             },
             { error ->
-                callback.onError(error.toString())
+                onError(error.toString())
             })
         {
             override fun getParams(): Map<String, String> {
@@ -724,22 +746,23 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
         queue.add(request)
     }
 
-    override fun getCohortsMoodle(context: Context, callback: ServerCallback) {
+    override fun getCohortsMoodle(context: Context, onSuccess:(JSONArray)->Unit,
+                                  onError:(String)->Unit) {
         val queue = Volley.newRequestQueue(context)
         val request: StringRequest = object : StringRequest(
             Method.POST, getMoodleServerUrl(),
             { response ->
                 try{
-                    callback.onSuccess(JSONArray(response))
+                    onSuccess(JSONArray(response))
                 }
                 catch (e:Exception)
                 {
-                    callback.onError(response)
+                    onError(response)
                 }
 
             },
             { error ->
-                callback.onError(error.toString())
+                onError(error.toString())
             })
         {
             override fun getParams(): Map<String, String> {
@@ -760,18 +783,19 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
         queue.add(request)
     }
 
-    override fun getCohortMembersMoodle(context: Context, cohort_id: Int, callback: ServerCallback) {
+    override fun getCohortMembersMoodle(context: Context, cohort_id: Int, onSuccess:(JSONArray)->Unit,
+                                        onError:(String)->Unit) {
         val queue = Volley.newRequestQueue(context)
         val request: StringRequest = object : StringRequest(
             Method.POST, getMoodleServerUrl(),
             { response ->
                 try{
-                    var jsonArrayRes=JSONArray(response)
-                    var jsonObjectRes = jsonArrayRes.getJSONObject(0)
-                    var user_ids = jsonObjectRes.getString("userids")
+                    val jsonArrayRes=JSONArray(response)
+                    val jsonObjectRes = jsonArrayRes.getJSONObject(0)
+                    val userIds = jsonObjectRes.getString("userids")
 
-                    val pattern = Regex("[0-9]{1,}")
-                    val res1 : Sequence<MatchResult> = pattern.findAll(user_ids, 0)
+                    val pattern = Regex("\\d+")
+                    val res1 : Sequence<MatchResult> = pattern.findAll(userIds, 0)
                     val userList = ArrayList<String>()
                     // Prints all the matches using forEach loop
                     res1.forEach()
@@ -779,24 +803,22 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
                             matchResult -> userList.add(matchResult.value)
                     }
 
-                   getUserByFieldMoodle(context,"id",userList,object :ServerCallback{
-                       override fun onSuccess(result: JSONArray) {
-                           callback.onSuccess(result)
+                   getUserByFieldMoodle(context,"id",userList,
+                       onSuccess={result->
+                           onSuccess(result)
+                       }, onError={result->
+                           onError(result)
                        }
-
-                       override fun onError(result: String) {
-                           callback.onError(result)
-                       }
-                   })
+                   )
                 }
                 catch (e:Exception)
                 {
-                    callback.onError(response)
+                    onError(response)
                 }
 
             },
             { error ->
-                callback.onError(error.toString())
+                onError(error.toString())
             })
         {
             override fun getParams(): Map<String, String> {
@@ -824,27 +846,23 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
     ): String {
         try{
             lateinit var finalurl: String
-            var uri = Uri.parse(url)
-            val newurl: URL
+            val uri = Uri.parse(url)
             val bitmap: Bitmap
-            var base64: String? = ""
-            if (url != null) {
-                finalurl = "http://" + uri.host + "/webservice/"
-                finalurl += url.substring(url.indexOf("pluginfile.php")) //For not Default Pic
-                finalurl = finalurl.split("?")[0]
-                finalurl += "?token=${token}"
+            val base64: String
+            finalurl = "http://" + uri.host + "/webservice/"
+            finalurl += url.substring(url.indexOf("pluginfile.php")) //For not Default Pic
+            finalurl = finalurl.split("?")[0]
+            finalurl += "?token=${token}"
 
-                val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
-                StrictMode.setThreadPolicy(policy)
-                newurl = URL(finalurl)
-                bitmap = BitmapFactory.decodeStream(newurl.openConnection().getInputStream())
-                val outputStream = ByteArrayOutputStream()
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-                base64 = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT)
+            val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+            StrictMode.setThreadPolicy(policy)
+            val newUrl = URL(finalurl)
+            bitmap = BitmapFactory.decodeStream(newUrl.openConnection().getInputStream())
+            val outputStream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+            base64 = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT)
 
-                return base64.toString()
-            }
-            return null.toString()
+            return base64
         }
         catch (e:Exception)
         {
@@ -856,7 +874,8 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
         context: Context,
         courseid: String,
         groupid: String,
-        callback: ServerCallback
+        onSuccess:(JSONArray)->Unit,
+        onError:(String)->Unit
     ) {
         val mRequestQueue = Volley.newRequestQueue(context)
         val request = object : StringRequest(
@@ -865,15 +884,15 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
                 try{
                     val outerArray = JSONArray(response)
 
-                    callback.onSuccess(outerArray)
+                    onSuccess(outerArray)
                 }
                 catch (ex:Exception)
                 {
-                    callback.onError(response)
+                    onError(response)
                 }
             },
             { error ->
-                callback.onError(error.toString())
+                onError(error.toString())
             })
         {
             override fun getParams(): Map<String, String> {
@@ -898,7 +917,11 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
         }
         mRequestQueue.add(request)
     }
-    override fun getTeacherUserByCourseGroupMoodle(context: Context, courseid: String, groupid:String, roleid:String, callback: ServerCallback) {
+    override fun getTeacherUserByCourseGroupMoodle(context: Context,
+                                                   courseid: String,
+                                                   groupid:String,
+                                                   roleid:String, onSuccess:(JSONArray)->Unit,
+                                                   onError:(String)->Unit) {
 
         val mRequestQueue = Volley.newRequestQueue(context)
         val request = object : StringRequest(
@@ -907,15 +930,15 @@ class AttendanceRepository(val URL:String, val CORE_TOKEN: String, val ATTENDANC
                 try{
                     val outerArray = JSONArray(response)
 
-                    callback.onSuccess(outerArray)
+                    onSuccess(outerArray)
                 }
                 catch (ex:Exception)
                 {
-                    callback.onError(response)
+                    onError(response)
                 }
             },
             { error ->
-                callback.onError(error.toString())
+                onError(error.toString())
             })
         {
             override fun getParams(): Map<String, String> {
