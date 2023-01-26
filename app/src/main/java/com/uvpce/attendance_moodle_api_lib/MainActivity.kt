@@ -15,6 +15,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.uvpce.attendance_moodle_api_library.*
+import com.uvpce.attendance_moodle_api_library.repo.AttendanceRepository
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -32,8 +33,7 @@ class MainActivity : AppCompatActivity() {
         val iv1 = findViewById<ImageView>(R.id.iv1)
         tv1.setTextIsSelectable(true)
         tv1.movementMethod = ScrollingMovementMethod()
-        val attRepo = MoodleController.
-        getAttendanceRepository(
+        val attRepo = AttendanceRepository(
             "http://202.131.126.214",
             "4f3c9f8f0404a7db50825391c295937e",
             "697859a828111d63c3f68543ac986827",

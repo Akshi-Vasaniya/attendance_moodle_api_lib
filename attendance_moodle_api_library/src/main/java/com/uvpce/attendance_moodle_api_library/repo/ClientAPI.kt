@@ -13,6 +13,9 @@ class ClientAPI {
         fun getDefaultUserPictureUrl(moodleUrl:String):String{
             return "$moodleUrl$userDefaultPicURL"
         }
+        val courseAttendaceMap = mapOf(
+            "35" to mapOf("name" to "Attendance", "id" to "52"),
+        )
         fun showErrorBox(context: Context, title: String, msg: String, negB:String = "", posB:String = "", cancelable: Boolean = true){
             val alertDialogBuilder = AlertDialog.Builder(context)
             alertDialogBuilder.setTitle(title)

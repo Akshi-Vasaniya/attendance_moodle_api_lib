@@ -3,19 +3,17 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import com.example.guniattendancefaculty.moodle.model.*
-import com.uvpce.attendance_moodle_api_library.MoodleController
+import com.uvpce.attendance_moodle_api_library.model.MoodleAttendance
 import com.uvpce.attendance_moodle_api_library.util.BitmapUtils
 import org.json.JSONArray
 import java.nio.file.Path
 import java.nio.file.Paths
 
-class MoodleRepository(
+class ModelRepository(
     private val context:Context,
     private val moodleUrl:String) {
-    private val attRepo: iAttendanceRepository = MoodleController.
-    getAttendanceRepository(moodleUrl, ClientAPI.coreToken,ClientAPI.attendanceToken,ClientAPI.fileUploadToken)
-    private val TAG = "MoodleRepository"
-
+    private val attRepo = AttendanceRepository(moodleUrl, ClientAPI.coreToken,ClientAPI.attendanceToken,ClientAPI.fileUploadToken)
+    private val TAG = "ModelRepository"
     fun isStudentRegisterForFace(enrollmentNo:String, onReceive:(Boolean)->Unit, onError:(String)->Unit){
 
         attRepo.getUserInfoMoodle(context, enrollmentNo, onSuccess =  { result->
@@ -133,7 +131,6 @@ class MoodleRepository(
             }
         )
     }
-
     fun getStudentList(course:MoodleCourse,group:MoodleGroup,onReceiveData:(List<MoodleUserInfo>)->Unit,onError:(String)->Unit){
         attRepo.getEnrolledUserByCourseGroupMoodle(context,course.id,group.groupid,
             onError={result->
@@ -161,9 +158,7 @@ class MoodleRepository(
         )
 
     }
-
-
-    fun getGroupInformation(course:MoodleCourse, onReceiveData: (List<MoodleGroup>) -> Unit, onError: (String) -> Unit){
+    fun getGroupList(course:MoodleCourse, onReceiveData: (List<MoodleGroup>) -> Unit, onError: (String) -> Unit){
         attRepo.getCourseGroupsMoodle(context,course.id,
             onError={result->
                 onError(result)
@@ -179,8 +174,6 @@ class MoodleRepository(
             }
         )
     }
-
-
     fun getSessionInformation(course:MoodleCourse,
                               onReceiveData: (List<MoodleSession>) -> Unit,
                               onError: (String) -> Unit){
@@ -205,8 +198,6 @@ class MoodleRepository(
             }
         )
     }
-
-
     fun getFacultyInformation(userName: String, onReceiveData: (List<MoodleUserInfo>) -> Unit, onError: (String) -> Unit){
         attRepo.getFacultyInfoMoodle(context,userName,onError={result->
                 onError(result)
@@ -230,27 +221,24 @@ class MoodleRepository(
             }
         )
     }
-
-//    fun getCourceGroup(cource_id:String,onReceiveData: (List<MoodleUser>) -> Unit,onError: (String) -> Unit){
-//        attRepo.getUserInfoMoodle(context,cource_id,object:ServerCallback{
-//            override fun onError(result: String) {
-//                onError(result)
-//            }
-//            override fun onSuccess(result: JSONArray) {
-//                val CourceGroupList=ArrayList<MoodleUser>();
-//                for (i in 0 until result.length()){
-//                    CourceGroupList.add(MoodleUser(result.getJSONObject(i).getString("id"),
-//                        result.getJSONObject(i).getString("username"),
-//                        result.getJSONObject(i).getString("firstname"),
-//                        result.getJSONObject(i).getString("lastname"),
-//                        result.getJSONObject(i).getString("fullname"),
-//                        result.getJSONObject(i).getString("profileimageurl")))
-//                }
-//                onReceiveData(CourceGroupList)
-//            }
-//        })
-//    }
-
-
-
+    fun getAttendance(course:MoodleCourse,
+                      onReceiveData: (MoodleAttendance) -> Unit,
+                      onError: (String) -> Unit){
+        val courseAttendance = ClientAPI.courseAttendaceMap[course.id]
+        if(courseAttendance == null){
+            onError("Course can't found.")
+            return
+        }
+        val attendanceName = courseAttendance["name"]
+        if(attendanceName == null){
+            onError("Attendance Name can't found.")
+            return
+        }
+        val attendanceId = courseAttendance["id"]
+        if(attendanceId == null){
+            onError("Attendance id can't found.")
+            return
+        }
+        onReceiveData(MoodleAttendance(course,attendanceId,attendanceName))
+    }
 }
