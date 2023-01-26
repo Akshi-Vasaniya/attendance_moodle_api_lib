@@ -173,6 +173,15 @@ interface iAttendanceRepository {
      */
     fun getCategoriesMoodle(context: Context,callback: ServerCallback)
 
-    fun getCohorts(context: Context,callback: ServerCallback)
+    fun getCohortsMoodle(context: Context,callback: ServerCallback)
 
+    fun getCohortMembersMoodle(context: Context,cohort_id:Int,callback: ServerCallback)
+
+    fun getUserByFieldMoodle(context: Context,field:String,value:ArrayList<String>,callback: ServerCallback)
+
+    fun resolveImgURLMoodle(url:String,token:String):String
+
+    fun getEnrolledUserByCourseGroupMoodle(context: Context, courseid: String,groupid:String ,callback: ServerCallback)
+
+    fun getTeacherUserByCourseGroupMoodle(context: Context, courseid: String, groupid:String, roleid:String, callback: ServerCallback)
 }

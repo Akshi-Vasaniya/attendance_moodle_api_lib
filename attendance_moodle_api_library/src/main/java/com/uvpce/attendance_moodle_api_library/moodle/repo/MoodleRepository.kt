@@ -5,17 +5,11 @@ import com.example.guniattendancefaculty.moodle.model.*
 import com.uvpce.attendance_moodle_api_library.MoodleController
 import com.uvpce.attendance_moodle_api_library.ServerCallback
 import com.uvpce.attendance_moodle_api_library.iAttendanceRepository
-import com.uvpce.attendance_moodle_api_library.moodle.Auth
 import org.json.JSONArray
-import org.json.JSONObject
-import kotlin.math.log
 
-class MoodleRepository(val context:Context) {
+class MoodleRepository(val context:Context,val url:String,val core_token:String, val attendance_token:String, val file_upload_token:String) {
     private val attRepo: iAttendanceRepository = MoodleController.
-    getAttendanceRepository(
-    Auth.url, Auth.core_token,
-    Auth.attendance_token ,
-    Auth.file_token)
+    getAttendanceRepository(url, core_token,attendance_token,file_upload_token)
 
     fun getUserEnrolledCourseList(userName:String,onReceiveData:(List<MoodleCourse>)->Unit,onError:(String)->Unit){
         attRepo.getUserCoursesListMoodle(context,userName,object:ServerCallback{
@@ -36,7 +30,7 @@ class MoodleRepository(val context:Context) {
     }
 
     fun getStudentList(course:MoodleCourse,group:MoodleGroup,onReceiveData:(List<MoodleUserInfo>)->Unit,onError:(String)->Unit){
-        var AttendanceRepo=AttendanceRepository(context).getEnrolledUserByCourseGroup(context,course.id,group.groupid,object :ServerCallback{
+        attRepo.getEnrolledUserByCourseGroupMoodle(context,course.id,group.groupid,object :ServerCallback{
             override fun onError(result: String) {
                 onError(result)
             }
