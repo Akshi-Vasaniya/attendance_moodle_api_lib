@@ -15,7 +15,7 @@ interface iAttendanceRepository {
      * @return UserInfo - JSONArray
      * @see <a href="https://github.com/dhavanikgithub/attendance_moodle_api_lib/blob/master/functions%20response/getFacultyInfoMoodle.txt">Sample Response</a>
      */
-    fun getUserInfoMoodle(context: Context, username:String, onSuccess:(JSONArray)->Unit,
+    fun getUserInfoMoodle(username:String, onSuccess:(JSONArray)->Unit,
                           onError:(String)->Unit)
 
     /**
@@ -27,7 +27,7 @@ interface iAttendanceRepository {
      * @return UserInfo - JSONArray
      * @see <a href="https://github.com/dhavanikgithub/attendance_moodle_api_lib/blob/master/functions%20response/getFacultyInfoMoodle.txt">Sample Response</a>
      */
-    fun getFacultyInfoMoodle(context: Context,faculty_name: String,onSuccess:(JSONArray)->Unit,
+    fun getFacultyInfoMoodle(faculty_name: String,onSuccess:(JSONArray)->Unit,
                              onError:(String)->Unit)
 
     /**
@@ -39,7 +39,7 @@ interface iAttendanceRepository {
      * @return List of Courses - JSONArray
      * @see <a href="https://github.com/dhavanikgithub/attendance_moodle_api_lib/blob/master/functions%20response/getUserCoursesListMoodle.txt">Sample Response</a>
      */
-    fun getUserCoursesListMoodle(context: Context, username:String,onSuccess:(JSONArray)->Unit,
+    fun getUserCoursesListMoodle(username:String,onSuccess:(JSONArray)->Unit,
                                  onError:(String)->Unit)
 
     /**
@@ -52,7 +52,7 @@ interface iAttendanceRepository {
      * @return attendance id - JSONArray
      * @see <a href="https://github.com/dhavanikgithub/attendance_moodle_api_lib/blob/master/functions%20response/createAttendanceMoodle.txt">Sample Response</a>
      */
-    fun createAttendanceMoodle(context: Context, course_id:String, attendance_name:String, onSuccess:(JSONArray)->Unit,
+    fun createAttendanceMoodle(course_id:String, attendance_name:String, onSuccess:(JSONArray)->Unit,
                                onError:(String)->Unit)
 
     /**
@@ -68,7 +68,7 @@ interface iAttendanceRepository {
      * @return session id - JSONArray
      * @see <a href="https://github.com/dhavanikgithub/attendance_moodle_api_lib/blob/master/functions%20response/createSessionMoodle.txt">Sample Response</a>
      */
-    fun createSessionMoodle(context: Context, course_id:String,attendance_id:String, session_time:String, duration:String, group_id:String, onSuccess:(JSONArray)->Unit,
+    fun createSessionMoodle(course_id:String,attendance_id:String, session_time:String, duration:String, group_id:String, onSuccess:(JSONArray)->Unit,
                             onError:(String)->Unit)
 
     /**
@@ -80,7 +80,7 @@ interface iAttendanceRepository {
      * @return GroupsInfo - JSONArray
      * @see <a href="https://github.com/dhavanikgithub/attendance_moodle_api_lib/blob/master/functions%20response/getCourseGroupsMoodle.txt">Sample Response</a>
      */
-    fun getCourseGroupsMoodle(context: Context,course_id: String,onSuccess:(JSONArray)->Unit,
+    fun getCourseGroupsMoodle(course_id: String,onSuccess:(JSONArray)->Unit,
                               onError:(String)->Unit)
 
     /**
@@ -100,7 +100,7 @@ interface iAttendanceRepository {
      * @return MessageInfo - JSONArray
      * @see <a href="https://github.com/dhavanikgithub/attendance_moodle_api_lib/blob/master/functions%20response/sendMessangeMoodle.txt">Sample Response</a>
      */
-    fun sendMessageMoodle(context: Context, user_id:String, attendance_id:String,course_id:String,
+    fun sendMessageMoodle(user_id:String, attendance_id:String,course_id:String,
                           faculty_id:String, faculty_location:String, group_id:String, session_id:String,
                           start_time_of_attendance:String, end_time_of_attendance:String,
                           onSuccess:(JSONArray)->Unit,
@@ -118,7 +118,7 @@ interface iAttendanceRepository {
      *
      * @return Null
      */
-    fun takeAttendanceMoodle(context: Context, session_id:String,student_id:String,taken_by_id:String,status_id:String,status_set:String,onSuccess:(JSONArray)->Unit,
+    fun takeAttendanceMoodle(session_id:String,student_id:String,taken_by_id:String,status_id:String,status_set:String,onSuccess:(JSONArray)->Unit,
                              onError:(String)->Unit)
 
     /**
@@ -130,7 +130,7 @@ interface iAttendanceRepository {
      * @return SessionsList - JSONArray
      * @see <a href="https://github.com/dhavanikgithub/attendance_moodle_api_lib/blob/master/functions%20response/getSessionsListMoodle.txt">Sample Response</a>
      */
-    fun getSessionsListMoodle(context: Context,attendance_id:String,onSuccess:(JSONArray)->Unit,
+    fun getSessionsListMoodle(attendance_id:String,onSuccess:(JSONArray)->Unit,
                               onError:(String)->Unit)
 
     /**
@@ -149,7 +149,7 @@ interface iAttendanceRepository {
      * @return UploadFileInfo - JSONArray
      * @see <a href="https://github.com/dhavanikgithub/attendance_moodle_api_lib/blob/master/functions%20response/uploadFileMoodle.txt">Sample Response</a>
      */
-    fun uploadFileMoodle(context: Context,component:String,file_area:String,item_id:String,file_path:String,file_name:String,file_content:String,context_level:String,instanceid:String,onSuccess:(JSONArray)->Unit,
+    fun uploadFileMoodle(component:String,file_area:String,item_id:String,file_path:String,file_name:String,file_content:String,context_level:String,instanceid:String,onSuccess:(JSONArray)->Unit,
                          onError:(String)->Unit)
 
     /**
@@ -162,7 +162,7 @@ interface iAttendanceRepository {
      * @return UpdatedPictureInfo - JSONArray
      * @see <a href="https://github.com/dhavanikgithub/attendance_moodle_api_lib/blob/master/functions%20response/updatePictureMoodle.txt">Sample Response</a>
      */
-    fun updatePictureMoodle(context: Context,draft_item_id:String,user_id:String,onSuccess:(JSONArray)->Unit,
+    fun updatePictureMoodle(draft_item_id:String,user_id:String,onSuccess:(JSONArray)->Unit,
                             onError:(String)->Unit)
 
     /**
@@ -176,7 +176,7 @@ interface iAttendanceRepository {
      * @return Message - JSONObject
      * @see <a href="https://github.com/dhavanikgithub/attendance_moodle_api_lib/blob/master/functions%20response/getMessageMoodle.txt">Sample Response</a>
      */
-    fun getMessageMoodle(context: Context,user_id:String,type:String,read:String,onSuccess:(JSONObject)->Unit,
+    fun getMessageMoodle(user_id:String,type:String,read:String,onSuccess:(JSONObject)->Unit,
                          onError:(String)->Unit)
 
     /**
@@ -187,23 +187,23 @@ interface iAttendanceRepository {
      * @return CategoriesInfo - JSONArray
      * @see <a href="https://github.com/dhavanikgithub/attendance_moodle_api_lib/blob/master/functions%20response/getCategoriesMoodle.txt">Sample Response</a>
      */
-    fun getCategoriesMoodle(context: Context,onSuccess:(JSONArray)->Unit,
+    fun getCategoriesMoodle(onSuccess:(JSONArray)->Unit,
                             onError:(String)->Unit)
 
-    fun getCohortsMoodle(context: Context,onSuccess:(JSONArray)->Unit,
+    fun getCohortsMoodle(onSuccess:(JSONArray)->Unit,
                          onError:(String)->Unit)
 
-    fun getCohortMembersMoodle(context: Context,cohort_id:Int,onSuccess:(JSONArray)->Unit,
+    fun getCohortMembersMoodle(cohort_id:Int,onSuccess:(JSONArray)->Unit,
                                onError:(String)->Unit)
 
-    fun getUserByFieldMoodle(context: Context,field:String,value:ArrayList<String>,onSuccess:(JSONArray)->Unit,
+    fun getUserByFieldMoodle(field:String,value:ArrayList<String>,onSuccess:(JSONArray)->Unit,
                              onError:(String)->Unit)
 
     fun resolveImgURLMoodle(url:String,token:String):String
 
-    fun getEnrolledUserByCourseGroupMoodle(context: Context, courseid: String,groupid:String ,onSuccess:(JSONArray)->Unit,
+    fun getEnrolledUserByCourseGroupMoodle( courseid: String,groupid:String ,onSuccess:(JSONArray)->Unit,
                                            onError:(String)->Unit)
 
-    fun getTeacherUserByCourseGroupMoodle(context: Context, courseid: String, groupid:String, roleid:String, onSuccess:(JSONArray)->Unit,
+    fun getTeacherUserByCourseGroupMoodle(courseid: String, groupid:String, roleid:String, onSuccess:(JSONArray)->Unit,
                                           onError:(String)->Unit)
 }

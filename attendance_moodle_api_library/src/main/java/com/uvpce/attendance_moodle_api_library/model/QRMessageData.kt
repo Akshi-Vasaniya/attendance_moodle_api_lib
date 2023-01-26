@@ -1,24 +1,71 @@
 package com.uvpce.attendance_moodle_api_library.model
 
-import org.json.JSONArray
+import android.util.Base64
+import org.json.JSONObject
 
-class QRMessageData {
+class QRMessageData(
+    val session: MoodleSession,
+    val loggedInFacultyUserId:String,
+    val attendanceByFacultyId:String,
+    val facultyLocationLat:String,
+    val facultyLocationLong:String,
+    val attendanceStartDate:Long,
+    val attendanceEndDate:Long,
+    val attendanceDuration:Long): ModelBase {
+
+    override fun toJsonObject(): JSONObject {
+        val json = JSONObject()
+        json.put("session",session.toJsonObject())
+        json.put("loggedInFacultyUserId",loggedInFacultyUserId)
+        json.put("attendanceByFacultyId",attendanceByFacultyId)
+        json.put("facultyLocationLat",facultyLocationLat)
+        json.put("facultyLocationLong",facultyLocationLong)
+        json.put("attendanceStartDate",attendanceStartDate)
+        json.put("attendanceEndDate",attendanceEndDate)
+        json.put("attendanceDuration",attendanceDuration)
+        return json
+    }
+
+    override fun toString(): String {
+        val jsonObject = toJsonObject()
+        return jsonObject.toString(4)
+    }
     companion object{
-        var attendance_id:Int=57
-        val sessionData = JSONArray()
-        var session_start_time:Int=0
-        var session_end_time:Int=0
-        var session_duration:Int=0
-        var faculty_userId:Int=0
-        var courseid:Int=0
-        var attendanceid_by_course= mutableMapOf<String, String>()
-        var course_name:String="null"
-        var groupid:Int=0
-        var group_name:String="null"
-        var faculty_loc_lat: Int=0
-        var faculty_loc_long: Int=0
-        var attendance_start_date:Int=0
-        var attendance_end_date:Int=0
-        var attendance_duration:Int=0
+        fun fromJsonObject(jsonString: String):QRMessageData {
+            val jsonObject = JSONObject(jsonString)
+            val session = MoodleSession.fromJsonObject(jsonObject.getString("session"))
+            return QRMessageData(
+                session,
+                jsonObject.getString("loggedInFacultyUserId"),
+                jsonObject.getString("attendanceByFacultyId"),
+                jsonObject.getString("facultyLocationLat"),
+                jsonObject.getString("facultyLocationLong"),
+                jsonObject.getLong("attendanceStartDate"),
+                jsonObject.getLong("attendanceEndDate"),
+                jsonObject.getLong("attendanceDuration"),
+            )
+        }
+        fun getQRMessageObject(QrCodeMessage:String,
+                               onSuccess:(QRMessageData)->Unit,
+                               onError:(String)->Unit)
+        {
+            try {
+                onSuccess(QRMessageData.fromJsonObject(String(Base64.decode(QrCodeMessage,Base64.DEFAULT))))
+            }
+            catch (e:java.lang.Exception){
+                onError("Errors: ${e.message}")
+            }
+        }
+        fun getQRMessageString(QrCodeMessageObject:QRMessageData,
+                               onSuccess:(String)->Unit,
+                               onError:(String)->Unit){
+            try {
+                onSuccess(Base64.encodeToString(QrCodeMessageObject.toString().toByteArray(),Base64.DEFAULT))
+            }
+            catch (e:Exception){
+                onError("Errors: ${e.message}")
+            }
+
+        }
     }
 }

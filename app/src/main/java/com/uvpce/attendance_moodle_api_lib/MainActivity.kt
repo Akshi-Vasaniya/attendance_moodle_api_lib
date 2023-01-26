@@ -33,15 +33,16 @@ class MainActivity : AppCompatActivity() {
         val iv1 = findViewById<ImageView>(R.id.iv1)
         tv1.setTextIsSelectable(true)
         tv1.movementMethod = ScrollingMovementMethod()
-        val attRepo = AttendanceRepository(
-            "http://202.131.126.214",
-            "4f3c9f8f0404a7db50825391c295937e",
-            "697859a828111d63c3f68543ac986827",
-        "8d29dd97dd7c93b0e3cdd43d4b797c87")
+
 
         btn1.setOnClickListener {
             val i = (Date().time / 1000).toInt()
 
+//            val attRepo = AttendanceRepository(this,
+//                "http://202.131.126.214",
+//                "4f3c9f8f0404a7db50825391c295937e",
+//                "697859a828111d63c3f68543ac986827",
+//                "8d29dd97dd7c93b0e3cdd43d4b797c87")
 //            attRepo.sendMessageMoodle(this,"5","null","null","null","null","null","null","null","null",object:ServerCallback{
 //                override fun onSuccess(result: JSONArray) {
 //                    tv1.text=result.toString(4)
@@ -201,15 +202,15 @@ class MainActivity : AppCompatActivity() {
 //                    tv1.text=result
 //                }
 //            })
-            var url="http://202.131.126.214/pluginfile.php/3370/user/icon/classic/f1?rev=21913"
-            var token = "8d29dd97dd7c93b0e3cdd43d4b797c87"
-            tv1.text = attRepo.resolveImgURLMoodle(url,token)
+//            var url="http://202.131.126.214/pluginfile.php/3370/user/icon/classic/f1?rev=21913"
+//            var token = "8d29dd97dd7c93b0e3cdd43d4b797c87"
+//            tv1.text = attRepo.resolveImgURLMoodle(url,token)
 
         }
         tv1.setOnClickListener {
-            val cm: ClipboardManager =this.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            /*val cm: ClipboardManager =this.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             cm.setText(tv1.getText())
-            Toast.makeText(this, "Copied to clipboard", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Copied to clipboard", Toast.LENGTH_SHORT).show()*/
         }
 
     }

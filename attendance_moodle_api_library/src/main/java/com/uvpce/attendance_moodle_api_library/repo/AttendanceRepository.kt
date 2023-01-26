@@ -23,6 +23,7 @@ import java.net.URL
  * @return Object
  */
 class AttendanceRepository(
+    private val context: Context,
     private val MoodleURL:String,
     val CORE_TOKEN: String,
     val ATTENDANCE_TOKEN:String,
@@ -31,7 +32,7 @@ class AttendanceRepository(
 
     fun getMoodleServerUrl():String {return "$MoodleURL/webservice/rest/server.php" }
 
-    override fun getUserInfoMoodle(context: Context, username: String,onSuccess:(JSONArray)->Unit,
+    override fun getUserInfoMoodle(username: String,onSuccess:(JSONArray)->Unit,
                                    onError:(String)->Unit) {
 
         val mRequestQueue = Volley.newRequestQueue(context)
@@ -74,7 +75,6 @@ class AttendanceRepository(
     }
 
     override fun getUserByFieldMoodle(
-        context: Context,
         field: String,
         value: ArrayList<String>,
         onSuccess:(JSONArray)->Unit,
@@ -121,7 +121,6 @@ class AttendanceRepository(
     }
 
     override fun getFacultyInfoMoodle(
-        context: Context,
         faculty_name: String,
         onSuccess:(JSONArray)->Unit,
         onError:(String)->Unit
@@ -164,10 +163,10 @@ class AttendanceRepository(
         mRequestQueue.add(request)
     }
 
-    override fun getUserCoursesListMoodle(context: Context, username: String,onSuccess:(JSONArray)->Unit,
+    override fun getUserCoursesListMoodle(username: String,onSuccess:(JSONArray)->Unit,
                                           onError:(String)->Unit) {
         val mRequestQueue = Volley.newRequestQueue(context)
-        getUserInfoMoodle(context,username,onSuccess= {result->
+        getUserInfoMoodle(username,onSuccess= {result->
                 val userid= result.getJSONObject(0).getString("id")
                 val request = object : StringRequest(
                     Method.POST, getMoodleServerUrl(),
@@ -219,7 +218,7 @@ class AttendanceRepository(
         )
     }
 
-    override fun createAttendanceMoodle(context: Context,
+    override fun createAttendanceMoodle(
                                         course_id: String,
                                         attendance_name:String,
                                         onSuccess:(JSONArray)->Unit,
@@ -275,7 +274,6 @@ class AttendanceRepository(
     }
 
     override fun createSessionMoodle(
-        context: Context,
         course_id:String,
         attendance_id:String,
         session_time:String,
@@ -362,7 +360,7 @@ class AttendanceRepository(
 
     }
 
-    override fun getCourseGroupsMoodle(context: Context, course_id: String, onSuccess:(JSONArray)->Unit,
+    override fun getCourseGroupsMoodle(course_id: String, onSuccess:(JSONArray)->Unit,
                                        onError:(String)->Unit) {
         val mRequestQueue = Volley.newRequestQueue(context)
         val request = object : StringRequest(
@@ -409,7 +407,7 @@ class AttendanceRepository(
         mRequestQueue.add(request)
     }
 
-    override fun sendMessageMoodle(context: Context, user_id:String, attendance_id:String,
+    override fun sendMessageMoodle( user_id:String, attendance_id:String,
                                    course_id:String,faculty_id:String, faculty_location:String,
                                    group_id:String, session_id:String,
                                    start_time_of_attendance:String,
@@ -463,7 +461,7 @@ class AttendanceRepository(
     }
 
     override fun takeAttendanceMoodle(
-        context: Context,
+
         session_id: String,
         student_id: String,
         taken_by_id: String,
@@ -513,7 +511,7 @@ class AttendanceRepository(
     }
 
     override fun getSessionsListMoodle(
-        context: Context,
+
         attendance_id: String,
         onSuccess:(JSONArray)->Unit,
         onError:(String)->Unit
@@ -556,7 +554,7 @@ class AttendanceRepository(
     }
 
     override fun uploadFileMoodle(
-        context: Context,
+
         component: String,
         file_area: String,
         item_id: String,
@@ -615,7 +613,7 @@ class AttendanceRepository(
     }
 
     override fun updatePictureMoodle(
-        context: Context,
+
         draft_item_id: String,
         user_id: String,
         onSuccess:(JSONArray)->Unit,
@@ -662,7 +660,7 @@ class AttendanceRepository(
     }
 
     override fun getMessageMoodle(
-        context: Context,
+
         user_id: String,
         type: String,
         read: String,
@@ -710,7 +708,7 @@ class AttendanceRepository(
         }
         queue.add(request)
     }
-    override fun getCategoriesMoodle(context: Context, onSuccess:(JSONArray)->Unit,
+    override fun getCategoriesMoodle(onSuccess:(JSONArray)->Unit,
                                      onError:(String)->Unit)
     {
         val queue = Volley.newRequestQueue(context)
@@ -748,7 +746,7 @@ class AttendanceRepository(
         queue.add(request)
     }
 
-    override fun getCohortsMoodle(context: Context, onSuccess:(JSONArray)->Unit,
+    override fun getCohortsMoodle(onSuccess:(JSONArray)->Unit,
                                   onError:(String)->Unit) {
         val queue = Volley.newRequestQueue(context)
         val request: StringRequest = object : StringRequest(
@@ -785,7 +783,7 @@ class AttendanceRepository(
         queue.add(request)
     }
 
-    override fun getCohortMembersMoodle(context: Context, cohort_id: Int, onSuccess:(JSONArray)->Unit,
+    override fun getCohortMembersMoodle(cohort_id: Int, onSuccess:(JSONArray)->Unit,
                                         onError:(String)->Unit) {
         val queue = Volley.newRequestQueue(context)
         val request: StringRequest = object : StringRequest(
@@ -805,7 +803,7 @@ class AttendanceRepository(
                             matchResult -> userList.add(matchResult.value)
                     }
 
-                   getUserByFieldMoodle(context,"id",userList,
+                   getUserByFieldMoodle("id",userList,
                        onSuccess={result->
                            onSuccess(result)
                        }, onError={result->
@@ -873,7 +871,6 @@ class AttendanceRepository(
     }
 
     override fun getEnrolledUserByCourseGroupMoodle(
-        context: Context,
         courseid: String,
         groupid: String,
         onSuccess:(JSONArray)->Unit,
@@ -919,7 +916,7 @@ class AttendanceRepository(
         }
         mRequestQueue.add(request)
     }
-    override fun getTeacherUserByCourseGroupMoodle(context: Context,
+    override fun getTeacherUserByCourseGroupMoodle(
                                                    courseid: String,
                                                    groupid:String,
                                                    roleid:String, onSuccess:(JSONArray)->Unit,
