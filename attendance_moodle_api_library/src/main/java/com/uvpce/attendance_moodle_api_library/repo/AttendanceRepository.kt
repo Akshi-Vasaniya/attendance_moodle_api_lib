@@ -9,7 +9,6 @@ import android.util.Base64
 import com.android.volley.AuthFailureError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.uvpce.attendance_moodle_api_library.model.QRMessageData
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -237,8 +236,8 @@ class AttendanceRepository(
                         val arrayJSON = JSONArray()
                         val objectJSON = JSONObject()
                         objectJSON.put("id",attendanceId.value)
-                        QRMessageData.attendanceid_by_course[course_id]=attendanceId.value
-                        QRMessageData.attendance_id=attendanceId.value.toInt()
+//                        QRMessageData.attendanceid_by_course[course_id]=attendance_id.value
+//                        QRMessageData.attendance_id=attendance_id.value.toInt()
                         arrayJSON.put(objectJSON)
 
                         onSuccess(arrayJSON)
@@ -297,30 +296,33 @@ class AttendanceRepository(
                         val objectJSON = JSONObject()
                         objectJSON.put("id",sessionId.value)
                         arrayJSON.put(objectJSON)
-                        getSessionsListMoodle(context,attendance_id,
-                            onError= { result ->
-                                onError(result)
-                            },onSuccess={result->
-                                for(i in 0 until result.length())
-                                {
-                                    val jsonObj = result.getJSONObject(i)
-                                    if(jsonObj.getString("id")==sessionId.value)
-                                    {
-                                        val sessend=(jsonObj.getString("sessdate").toLong() + jsonObj.getString("duration").toLong())
-
-                                        val tempJSONObj = JSONObject()
-                                        tempJSONObj.put("session_id",sessionId.value)
-                                        tempJSONObj.put("session_start_time",session_time)
-                                        tempJSONObj.put("session_end_time",sessend*1000)
-                                        tempJSONObj.put("session_duration",duration.toLong()/60)
-                                        QRMessageData.sessionData.put(tempJSONObj)
-                                        break
-                                    }
-                                }
-                                onSuccess(arrayJSON)
-
-                            }
-                        )
+                        onSuccess(arrayJSON)
+//                        getSessionsListMoodle(context,attendance_id,object:ServerCallback{
+//                            override fun onError(result: String) {
+//                                callback.onError(result)
+//                            }
+//
+//                            override fun onSuccess(result: JSONArray) {
+//                                for(i in 0 until result.length())
+//                                {
+//                                    val jsonObj = result.getJSONObject(i)
+//                                    if(jsonObj.getString("id")==session_id.value)
+//                                    {
+//                                        val sessend=(jsonObj.getString("sessdate").toLong() + jsonObj.getString("duration").toLong())
+//
+//                                        var tempJSONObj = JSONObject()
+//                                        tempJSONObj.put("session_id",session_id.value)
+//                                        tempJSONObj.put("session_start_time",session_time)
+//                                        tempJSONObj.put("session_end_time",sessend*1000)
+//                                        tempJSONObj.put("session_duration",duration.toLong()/60)
+//                                        QRMessageData.sessionData.put(tempJSONObj)
+//                                        break
+//                                    }
+//                                }
+//                                callback.onSuccess(arrayJSON)
+//
+//                            }
+//                        })
 
                     }
                     else{
