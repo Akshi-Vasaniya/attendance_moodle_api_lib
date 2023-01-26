@@ -16,7 +16,8 @@ class ModelRepository(
     private val attRepo = AttendanceRepository(context,moodleUrl, ClientAPI.coreToken,ClientAPI.attendanceToken,ClientAPI.fileUploadToken)
     private val TAG = "ModelRepository"
     fun isStudentRegisterForFace(enrollmentNo:String, onReceive:(Boolean)->Unit, onError:(String)->Unit){
-        attRepo.getUserInfoMoodle(enrollmentNo, onSuccess =  { result->
+        try{
+            attRepo.getUserInfoMoodle(enrollmentNo, onSuccess =  { result->
                 try {
                     var fetchedProfileURL = ""
                     //Enrollment exists.
@@ -55,10 +56,14 @@ class ModelRepository(
                 onError(result)
                 //Enrollment does not exists.
             }
-        )
-
+            )
+        }catch (e:Exception){
+            Log.i("Exception", "$e")
+            onError("Error:$e")
+        }
     }
     fun getStudentInfo(enrollmentNo:String, onReceive:(BaseUserInfo)->Unit, onError:(String)->Unit){
+        try{
         attRepo.getUserInfoMoodle( enrollmentNo, onSuccess={result->
                 val item = result.getJSONObject(0)
                 val userid = item.get("id").toString()
@@ -73,28 +78,38 @@ class ModelRepository(
             }
 
         )
+        }catch (e:Exception){
+            Log.i("Exception", "$e")
+            onError("Error:$e")
+        }
     }
     fun uploadStudentPicture(userid:String, curImageUri: Uri, onReceive: (JSONArray) -> Unit, onError: (String) -> Unit) {
-        //Update the selected photo in moodle
-        val bitmap =
-            context.let { it1 -> BitmapUtils.getBitmapFromUri(it1.contentResolver, curImageUri) }
-        val bitmapStr = bitmap.let { it1 -> BitmapUtils.bitmapToString(it1) }
+        try {
+            //Update the selected photo in moodle
+            val bitmap =
+                context.let { it1 ->
+                    BitmapUtils.getBitmapFromUri(
+                        it1.contentResolver,
+                        curImageUri
+                    )
+                }
+            val bitmapStr = bitmap.let { it1 -> BitmapUtils.bitmapToString(it1) }
 
-        //Create regex to get the filename from curImageUri
-        val path: Path = Paths.get(curImageUri.toString())
-        val filename: String = path.fileName.toString()
-        //Uploading the correct chosen pic
-        attRepo.uploadFileMoodle(
+            //Create regex to get the filename from curImageUri
+            val path: Path = Paths.get(curImageUri.toString())
+            val filename: String = path.fileName.toString()
+            //Uploading the correct chosen pic
+            attRepo.uploadFileMoodle(
 
-            "user",
-            "draft",
-            "0",
-            "/",
-            filename,
-            "$bitmapStr",
-            "user",
-            "2",
-            onSuccess={result->
+                "user",
+                "draft",
+                "0",
+                "/",
+                filename,
+                "$bitmapStr",
+                "user",
+                "2",
+                onSuccess = { result ->
                     Log.i(TAG, "Successfully uploaded the file:$result")
                     val item = result.getJSONObject(0)
                     //val contextid = item.get("contextid").toString()
@@ -103,35 +118,47 @@ class ModelRepository(
                     attRepo.updatePictureMoodle(
                         draftitemid,
                         userid,
-                        onSuccess={result1->
-                                onReceive(result1)
-                            },
-                        onError={result2->
-                                onError(result2)
-                            }
-                        )
-                }, onError={result->
+                        onSuccess = { result1 ->
+                            onReceive(result1)
+                        },
+                        onError = { result2 ->
+                            onError(result2)
+                        }
+                    )
+                }, onError = { result ->
                     onError(result)
                 }
             )
+        } catch (e: Exception) {
+            Log.i("Exception", "$e")
+            onError("Error:$e")
+        }
     }
-    fun getCourseListEnrolledByUser(userName:String, onReceiveData:(List<MoodleCourse>)->Unit, onError:(String)->Unit){
-        attRepo.getUserCoursesListMoodle(userName, onError={result->
+    fun getCourseListEnrolledByUser(userName:String, onReceiveData:(List<MoodleCourse>)->Unit, onError:(String)->Unit) {
+        try {
+            attRepo.getUserCoursesListMoodle(userName, onError = { result ->
                 onError(result)
-            },onSuccess={result->
+            }, onSuccess = { result ->
                 val courseList = ArrayList<MoodleCourse>();
-                for (i in 0 until result.length()){
-                    courseList.add( MoodleCourse(
-                        result.getJSONObject(i).getString("courseid"),
-                        result.getJSONObject(i).getString("coursename"),
-                        userName)
+                for (i in 0 until result.length()) {
+                    courseList.add(
+                        MoodleCourse(
+                            result.getJSONObject(i).getString("courseid"),
+                            result.getJSONObject(i).getString("coursename"),
+                            userName
+                        )
                     )
                 }
                 onReceiveData(courseList)
             }
-        )
+            )
+        } catch (e: Exception) {
+            Log.i("Exception", "$e")
+            onError("Error:$e")
+        }
     }
     fun getStudentList(course: MoodleCourse, group: MoodleGroup, onReceiveData:(List<MoodleUserInfo>)->Unit, onError:(String)->Unit){
+        try{
         attRepo.getEnrolledUserByCourseGroupMoodle(course.id,group.groupid,
             onError={result->
                 onError(result)
@@ -156,70 +183,86 @@ class ModelRepository(
                 Log.i("MoodleRepository", "onSuccess: "+result.toString(4))
             }
         )
-
+    } catch (e: Exception) {
+        Log.i("Exception", "$e")
+        onError("Error:$e")
     }
-    fun getGroupList(course: MoodleCourse, onReceiveData: (List<MoodleGroup>) -> Unit, onError: (String) -> Unit){
-        attRepo.getCourseGroupsMoodle(course.id,
-            onError={result->
-                onError(result)
-            },onSuccess={result->
-                val groupList=ArrayList<MoodleGroup>();
-                for (i in 0 until result.length()){
-                    groupList.add(
-                        MoodleGroup(course,
-                        result.getJSONObject(i).getString("groupid"),
-                        result.getJSONObject(i).getString("groupname"))
-                    )
+    }
+    fun getGroupList(course: MoodleCourse, onReceiveData: (List<MoodleGroup>) -> Unit, onError: (String) -> Unit) {
+        try {
+            attRepo.getCourseGroupsMoodle(course.id,
+                onError = { result ->
+                    onError(result)
+                }, onSuccess = { result ->
+                    val groupList = ArrayList<MoodleGroup>();
+                    for (i in 0 until result.length()) {
+                        groupList.add(
+                            MoodleGroup(
+                                course,
+                                result.getJSONObject(i).getString("groupid"),
+                                result.getJSONObject(i).getString("groupname")
+                            )
+                        )
+                    }
+                    course.groupList.addAll(groupList)
+                    onReceiveData(groupList)
                 }
-                onReceiveData(groupList)
-
-            }
-        )
+            )
+        } catch (e: Exception) {
+            Log.i("Exception", "$e")
+            onError("Error:$e")
+        }
     }
     fun getSessionInformation(course: MoodleCourse, attendance: MoodleAttendance, group: MoodleGroup,
                               onReceiveData: (List<MoodleSession>) -> Unit,
-                              onError: (String) -> Unit){
-        attRepo.getSessionsListMoodle(attendance.attendanceId,onError={result->
+                              onError: (String) -> Unit) {
+        try {
+            attRepo.getSessionsListMoodle(attendance.attendanceId, onError = { result ->
                 onError(result)
-            },onSuccess={result->
-                Log.i("MoodleRepository", "onSuccess: "+result.toString(4))
-                val sessionList=ArrayList<MoodleSession>();
+            }, onSuccess = { result ->
+                Log.i("MoodleRepository", "onSuccess: " + result.toString(4))
+                val sessionList = ArrayList<MoodleSession>();
                 for (i in 0 until result.length()) {
                     try {
                         val groupId = result.getJSONObject(i).getInt("groupid")
-                        if(groupId == group.groupid.toInt()){
+                        if (groupId == group.groupid.toInt()) {
                             val obj = MoodleSession(
-                                attendance, course,group,
+                                attendance, course, group,
                                 result.getJSONObject(i).getString("id"),
                                 result.getJSONObject(i).getString("description"),
                                 result.getJSONObject(i).getString("sessdate"),
                                 result.getJSONObject(i).getString("duration")
                             )
                             val statusList = result.getJSONObject(i).getJSONArray("statuses")
-                            for(j in 0 until statusList.length()){
+                            for (j in 0 until statusList.length()) {
                                 obj.statusList.add(
                                     MoodleSessionStatus(
                                         session = obj,
                                         id = statusList.getJSONObject(j).getString("id"),
                                         name = statusList.getJSONObject(j).getString("acronym"),
-                                        description = statusList.getJSONObject(j).getString("description"),
+                                        description = statusList.getJSONObject(j)
+                                            .getString("description"),
                                         grade = statusList.getJSONObject(j).getInt("grade")
                                     )
                                 )
                             }
                             sessionList.add(obj)
                         }
-                    }catch (e:JSONException){
-                        Log.e(TAG, "getSessionInformation: "+e.message,e )
+                    } catch (e: JSONException) {
+                        Log.e(TAG, "getSessionInformation: $e", e)
+                        onError("Error: $e")
                     }
                 }
                 onReceiveData(sessionList)
             }
-        )
+            )
+        } catch (e: Exception) {
+            Log.i("Exception", "$e")
+            onError("Error:$e")
+        }
     }
-
-
     fun getFacultyInformation(userName: String, onReceiveData: (List<MoodleUserInfo>) -> Unit, onError: (String) -> Unit){
+        try{
         attRepo.getFacultyInfoMoodle(userName,onError={result->
                 onError(result)
             },onSuccess={result->
@@ -241,26 +284,23 @@ class ModelRepository(
 //                onReceiveData(FacultyInfo)
             }
         )
+    } catch (e: Exception) {
+        Log.i("Exception", "$e")
+        onError("Error:$e")
+    }
     }
     fun getAttendance(course: MoodleCourse,
                       onReceiveData: (MoodleAttendance) -> Unit,
-                      onError: (String) -> Unit){
-        val courseAttendance = ClientAPI.courseAttendaceMap[course.id]
-        if(courseAttendance == null){
-            onError("Course can't found.")
-            return
+                      onError: (String) -> Unit) {
+        try {
+            val courseAttendance = ClientAPI.courseAttendaceMap.getJSONObject(course.id)
+            val attendanceName = courseAttendance.getString("name")
+            val attendanceId = courseAttendance.getString("id")
+            onReceiveData(MoodleAttendance(course, attendanceId, attendanceName))
+        } catch (e: Exception) {
+            Log.i("Exception", "$e")
+            onError("Error:$e")
         }
-        val attendanceName = courseAttendance["name"]
-        if(attendanceName == null){
-            onError("Attendance Name can't found.")
-            return
-        }
-        val attendanceId = courseAttendance["id"]
-        if(attendanceId == null){
-            onError("Attendance id can't found.")
-            return
-        }
-        onReceiveData(MoodleAttendance(course,attendanceId,attendanceName))
     }
 
     /**
@@ -269,12 +309,18 @@ class ModelRepository(
     fun getQRDataString(data:QRMessageData,
                         onSuccess:(String)->Unit,
                         onError:(String)->Unit){
+        try{
         QRMessageData.getQRMessageString(data,onSuccess,onError)
+        } catch (e: Exception) {
+            Log.i("Exception", "$e")
+            onError("Error:$e")
+        }
     }
     fun takePresentAttendance(scannedQRStringResponse:String,
                        enrollmentNo: String,
                        onSuccess:(JSONArray)->Unit,
                        onError:(String)->Unit){
+        try{
         QRMessageData.getQRMessageObject(scannedQRStringResponse,
             onSuccess={
                         val status = it.session.getPresentStatusId()
@@ -291,21 +337,31 @@ class ModelRepository(
             onError={
                 onError(it)
             })
+        } catch (e: Exception) {
+            Log.i("Exception", "$e")
+            onError("Error:$e")
+        }
     }
-    fun createAttendance(group:MoodleGroup,attendanceName:String,
+    fun createAttendance(course:MoodleCourse,attendanceName:String,
                          onSuccess:(MoodleAttendance)->Unit,
                          onError:(String)->Unit){
-        attRepo.createAttendanceMoodle(group.course.id,attendanceName,
+        try{
+        attRepo.createAttendanceMoodle(course.id,attendanceName,
             onSuccess = {
             try {
-                onSuccess(MoodleAttendance(group.course, it.getJSONObject(0).getString("id"),attendanceName))
+                onSuccess(MoodleAttendance(course, it.getJSONObject(0).getString("id"),attendanceName))
             }catch (e:Exception){
-                onError("Error:"+e.message)
+                Log.e(TAG, "createAttendance: $e", e)
+                onError("Error:$e")
             }
         },
         onError={
             onError(it)
         })
+        } catch (e: Exception) {
+            Log.i("Exception", "$e")
+            onError("Error:$e")
+        }
     }
     fun login(recievedMoodleUsername:String,
               recievedmoodlePassword:String,

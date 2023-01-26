@@ -53,7 +53,7 @@ class QRMessageData(
                 onSuccess(QRMessageData.fromJsonObject(String(Base64.decode(QrCodeMessage,Base64.DEFAULT))))
             }
             catch (e:java.lang.Exception){
-                onError("Errors: ${e.message}")
+                onError("Errors: ${e}")
             }
         }
         fun getQRMessageString(QrCodeMessageObject:QRMessageData,
@@ -63,7 +63,7 @@ class QRMessageData(
                 onSuccess(Base64.encodeToString(QrCodeMessageObject.toString().toByteArray(),Base64.DEFAULT))
             }
             catch (e:Exception){
-                onError("Errors: ${e.message}")
+                onError("Errors: ${e}")
             }
 
         }

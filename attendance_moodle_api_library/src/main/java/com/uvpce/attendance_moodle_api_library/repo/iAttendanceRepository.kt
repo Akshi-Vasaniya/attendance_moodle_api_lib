@@ -199,7 +199,10 @@ interface iAttendanceRepository {
     fun getUserByFieldMoodle(field:String,value:ArrayList<String>,onSuccess:(JSONArray)->Unit,
                              onError:(String)->Unit)
 
-    fun resolveImgURLMoodle(url:String,token:String):String
+    fun resolveImgURLMoodle(
+        url: String,
+        token: String,onSuccess: (String) -> Unit,onError: (String) -> Unit
+    )
 
     fun getEnrolledUserByCourseGroupMoodle( courseid: String,groupid:String ,onSuccess:(JSONArray)->Unit,
                                            onError:(String)->Unit)

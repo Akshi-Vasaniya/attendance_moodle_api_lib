@@ -685,7 +685,8 @@ class AttendanceRepository(
                 }
                 catch (e:Exception)
                 {
-                    onError(e.message.toString())
+                    Log.e(TAG, "getMessageMoodle: ", e)
+                    onError("Error: getMessageMoodle$e")
                 }
 
             },
@@ -847,8 +848,8 @@ class AttendanceRepository(
 
     override fun resolveImgURLMoodle(
         url: String,
-        token: String
-    ): String {
+        token: String,onSuccess: (String) -> Unit,onError: (String) -> Unit
+    ) {
         try{
             lateinit var finalurl: String
             val uri = Uri.parse(url)
@@ -867,11 +868,13 @@ class AttendanceRepository(
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
             base64 = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT)
 
-            return base64
+            onSuccess(base64)
         }
         catch (e:Exception)
         {
-            return e.message.toString()
+            Log.e(TAG, "getMessageMoodle: ", e)
+            onError("Error: getMessageMoodle$e")
+            //return e.message.toString()
         }
     }
 

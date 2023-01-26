@@ -21,6 +21,6 @@ class MoodleGroup(val course: MoodleCourse, val groupid:String, val groupName:St
     }
 
     override fun toString(): String {
-        return "\ngroupid=$groupid \ngroupname=$groupName"
+        return toJsonObject().toString(4)
     }
 }

@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Base64
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -15,6 +16,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.uvpce.attendance_moodle_api_library.*
+import com.uvpce.attendance_moodle_api_library.model.MoodleAttendance
+import com.uvpce.attendance_moodle_api_library.model.MoodleAttendanceBulk
+import com.uvpce.attendance_moodle_api_library.model.MoodleCourse
 import com.uvpce.attendance_moodle_api_library.repo.AttendanceRepository
 import org.json.JSONArray
 import org.json.JSONObject
@@ -25,6 +29,7 @@ import kotlin.Unit as Unit1
 
 
 class MainActivity : AppCompatActivity() {
+    val modelRepo = MoodleConfig.getModelRepo(this)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -34,19 +39,52 @@ class MainActivity : AppCompatActivity() {
         tv1.setTextIsSelectable(true)
         tv1.movementMethod = ScrollingMovementMethod()
 
-        val modelRepo = MoodleConfig.getModelRepo(this)
+
 
         btn1.setOnClickListener {
             val i = (Date().time / 1000).toInt()
-        modelRepo.login("20012011061","abc",
-        onSuccess = {
-            if(it)
-                tv1.text = "login success"
-            else
-                tv1.text = "invalid login"
-        }, onError = {
-                tv1.text = it
+            var string = ""
+            modelRepo.getCourseListEnrolledByUser("admin",{ courseList->
+                    string += "\nCourses:"+courseList.joinToString("\n")
+                    val selectedCourse = courseList[0]
+                    modelRepo.getGroupList(selectedCourse, onReceiveData = {
+                    //string += "Groups:"+groupList.joinToString("\n")
+                        string +="\nSelected Course = $selectedCourse\n"
+                        //Test Login
+                        modelRepo.login("20012011061","abc",
+                            onSuccess = {
+                                if(it)
+                                    string += "login success\n"
+                                else
+                                    string += "invalid login\n"
+
+                                        modelRepo.getAttendance(courseList[5], onReceiveData = {attendance->
+                                        string += attendance.toString()
+                                        Log.i("MainActivity", "onCreate: ${attendance.toString()}")
+                                        tv1.text = string
+                                    }, onError = {
+
+                                    })
+                                /*MoodleAttendanceBulk(modelRepo,courseList).
+                                createAttendanceInBulk(onSuccess = {attendanceList->
+                                    var log = attendanceList.joinToString("\n")
+                                    Log.i("MainActivity:Sample", "onCreate,Attendance:\n $log")
+                                    string += log
+                                })*/
+
+
+                            }, onError = {
+                                string += it
+                                tv1.text = string
+                            })
+
+                }, onError = {
+
+                })
+            }, onError = {
+
             })
+
 //            val attRepo = AttendanceRepository(this,
 //                "http://202.131.126.214",
 //                "4f3c9f8f0404a7db50825391c295937e",
@@ -229,4 +267,5 @@ class MainActivity : AppCompatActivity() {
         val bytesofimage = byteArrayOutputStream.toByteArray()
         return Base64.encodeToString(bytesofimage, Base64.DEFAULT)
     }
+
 }

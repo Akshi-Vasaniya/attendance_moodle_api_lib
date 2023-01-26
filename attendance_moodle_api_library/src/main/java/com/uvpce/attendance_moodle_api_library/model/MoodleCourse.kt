@@ -36,6 +36,6 @@ class MoodleCourse(val id:String,val Name:String,val userName:String): ModelBase
     }
 
     override fun toString(): String {
-        return "id:$id :: name=$Name :: userName=$userName"
+        return toJsonObject().toString(4)
     }
 }
