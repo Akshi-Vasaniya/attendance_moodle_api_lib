@@ -10,6 +10,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class Utility {
+    fun getCurrenMillis():Long{
+        val cal = Calendar.getInstance()
+        return cal.timeInMillis
+    }
     fun getCurrenDateTime():String{
         val cal = Calendar.getInstance()
         val df = SimpleDateFormat("dd-MM-yyyy hh:mm a")

@@ -1,9 +1,11 @@
 package com.example.guniattendancefaculty.moodle.model
 
 import android.graphics.Bitmap
+import android.util.Log
 import com.uvpce.attendance_moodle_api_library.model.ModelBase
 import com.uvpce.attendance_moodle_api_library.model.MoodleCourse
 import com.uvpce.attendance_moodle_api_library.model.MoodleGroup
+import com.uvpce.attendance_moodle_api_library.repo.AttendanceRepository
 import com.uvpce.attendance_moodle_api_library.util.Utility
 import org.json.JSONObject
 
@@ -59,5 +61,35 @@ class MoodleUserInfo(var course: MoodleCourse, var group: MoodleGroup,
 
     override fun toString(): String {
         return super.toString() +"\n"+course.Name+"\n"+group.groupName
+    }
+}
+class UserStatusBulk(val session_id:String, val taken_by_id: String, session:JSONObject, val attRepository: AttendanceRepository){
+    val statuses = session.getJSONArray("statuses").getJSONObject(1)
+    val status_id = statuses.getString("id")
+    val status_set = session.getString("statusset")
+    val userList = session.getJSONArray("users")
+    fun startExecution(onSuccess: (Boolean) -> Unit, onError:(String)->Unit){
+        Log.i("AttendaceRepository", "startExecution: started")
+        setUserStatus(0,onSuccess,onError)
+    }
+    private fun setUserStatus(currentIndex:Int,onSuccess: (Boolean) -> Unit, onError:(String)->Unit){
+        if(currentIndex >= userList.length()){
+            onSuccess(true)
+            return
+        }
+        Log.i("AttendaceRepository", "setUserStatus: currentIndex=$currentIndex and userList.Length=${userList.length()}")
+        val student_id = userList.getJSONObject(currentIndex).getString("id")
+        attRepository.takeAttendanceMoodle(
+            session_id = session_id,
+            taken_by_id = taken_by_id,
+            student_id = student_id,
+            status_id = status_id, status_set = status_set, onSuccess = {
+                    response ->
+                setUserStatus(currentIndex + 1,onSuccess,onError)
+                Log.i("AttendaceRepository", "setUserStatus: $response")
+            }, onError = {errorString->
+                setUserStatus(currentIndex + 1,onSuccess,onError)
+                Log.i("AttendaceRepository", "setUserStatus: Error: $errorString")
+            })
     }
 }

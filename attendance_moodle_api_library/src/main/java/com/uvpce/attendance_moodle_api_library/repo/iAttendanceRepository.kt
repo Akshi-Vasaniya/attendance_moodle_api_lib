@@ -68,7 +68,11 @@ interface iAttendanceRepository {
      * @return session id - JSONArray
      * @see <a href="https://github.com/dhavanikgithub/attendance_moodle_api_lib/blob/master/functions%20response/createSessionMoodle.txt">Sample Response</a>
      */
-    fun createSessionMoodle(course_id:String,attendance_id:String, session_time:String, duration:String,description:String, group_id:String, onSuccess:(JSONArray)->Unit,
+    fun createSessionMoodle(course_id:String,attendance_id:String,
+                            session_time:String,
+                            created_by_user_id:String,
+                            duration:String,description:String,
+                            group_id:String, onSuccess:(JSONArray)->Unit,
                             onError:(String)->Unit)
 
     /**
@@ -118,9 +122,16 @@ interface iAttendanceRepository {
      *
      * @return Null
      */
-    fun takeAttendanceMoodle(session_id:String,student_id:String,taken_by_id:String,status_id:String,status_set:String,onSuccess:(JSONArray)->Unit,
+    fun takeAttendanceMoodle(session_id:String,student_id:String,taken_by_id:String,status_id:String,
+                             status_set:String,onSuccess:(Boolean)->Unit,
                              onError:(String)->Unit)
 
+    fun getSessionMoodle(
+
+        session_id: String,
+        onSuccess:(JSONObject)->Unit,
+        onError:(String)->Unit
+    )
     /**
      * getSessionsListMoodle() use for list out all sessions of an attendance.
      * @param Context Application Context

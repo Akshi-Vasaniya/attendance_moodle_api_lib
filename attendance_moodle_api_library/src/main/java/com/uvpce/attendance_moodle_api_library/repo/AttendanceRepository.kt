@@ -10,6 +10,7 @@ import android.util.Log
 import com.android.volley.AuthFailureError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.guniattendancefaculty.moodle.model.UserStatusBulk
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.*
@@ -278,11 +279,24 @@ class AttendanceRepository(
         }
         mRequestQueue.add(request)
     }
-
+    private fun setDefaultAttendance(session_id:String,taken_by_id: String,
+                                     onSuccess:(JSONObject)->Unit,
+                                     onError:(String)->Unit){
+        getSessionMoodle(session_id,onSuccess={session->
+            UserStatusBulk(session_id,taken_by_id,session,this).startExecution(onSuccess = {
+                result->
+                if(result)
+                    onSuccess(session)
+                else
+                    onError("Can't set Default Status")
+            },onError=onError)
+        },onError=onError)
+    }
     override fun createSessionMoodle(
         course_id:String,
         attendance_id:String,
         session_time:String,
+        created_by_user_id:String,
         duration:String,
         description:String,
         group_id:String,
@@ -301,7 +315,13 @@ class AttendanceRepository(
                         val objectJSON = JSONObject()
                         objectJSON.put("id",sessionId.value)
                         arrayJSON.put(objectJSON)
-                        onSuccess(arrayJSON)
+                        setDefaultAttendance(session_id = sessionId.value,
+                            taken_by_id = created_by_user_id,onSuccess={
+                                onSuccess(arrayJSON)
+                            },onError={
+                                onError("can't set default attendance: Error: $it")
+                            })
+
 //                        getSessionsListMoodle(context,attendance_id,object:ServerCallback{
 //                            override fun onError(result: String) {
 //                                callback.onError(result)
@@ -469,13 +489,12 @@ class AttendanceRepository(
     }
 
     override fun takeAttendanceMoodle(
-
         session_id: String,
         student_id: String,
         taken_by_id: String,
         status_id: String,
         status_set: String,
-        onSuccess:(JSONArray)->Unit,
+        onSuccess:(Boolean)->Unit,
         onError:(String)->Unit
     ) {
         val mRequestQueue = Volley.newRequestQueue(context)
@@ -483,12 +502,17 @@ class AttendanceRepository(
             Method.POST, getMoodleServerUrl(),
             { response ->
                 try{
-                    val outerArray = JSONArray(response)
-                    onSuccess(outerArray)
+                    if(response == "null"){
+                        onSuccess(true)
+                    }else{
+                        val outerArray = JSONArray(response)
+                        onError("Error response:$outerArray")
+                    }
+                    //onSuccess(outerArray)
                 }
                 catch (ex:Exception)
                 {
-                    onError(response)
+                    onError("Error:$ex\nresponse:$response")
                 }
             },
             { error ->
@@ -518,8 +542,47 @@ class AttendanceRepository(
         mRequestQueue.add(request)
     }
 
-    override fun getSessionsListMoodle(
+    override fun getSessionMoodle(
+        session_id: String,
+        onSuccess:(JSONObject)->Unit,
+        onError:(String)->Unit
+    ) {
+        val mRequestQueue = Volley.newRequestQueue(context)
+        val request = object : StringRequest(
+            Method.POST, getMoodleServerUrl(),
+            { response ->
+                try{
+                    val outerArray = JSONObject(response)
+                    onSuccess(outerArray)
+                }
+                catch (ex:Exception)
+                {
+                    onError("Error: $ex \nresponse:$response")
+                }
+            },
+            { error ->
+                onError(error.toString())
+            })
+        {
+            override fun getParams(): Map<String, String> {
+                val params: MutableMap<String, String> = HashMap()
+                params["wstoken"] = ATTENDANCE_TOKEN
+                params["wsfunction"] = "mod_attendance_get_session"
+                params["moodlewsrestformat"] = "json"
+                params["sessionid"] = session_id.toString()
+                return params
+            }
 
+            @Throws(AuthFailureError::class)
+            override fun getHeaders(): Map<String, String> {
+                val params: MutableMap<String, String> = HashMap()
+                params["Content-Type"] = "application/x-www-form-urlencoded"
+                return params
+            }
+        }
+        mRequestQueue.add(request)
+    }
+    override fun getSessionsListMoodle(
         attendance_id: String,
         onSuccess:(JSONArray)->Unit,
         onError:(String)->Unit
@@ -562,7 +625,6 @@ class AttendanceRepository(
     }
 
     override fun uploadFileMoodle(
-
         component: String,
         file_area: String,
         item_id: String,
@@ -621,7 +683,6 @@ class AttendanceRepository(
     }
 
     override fun updatePictureMoodle(
-
         draft_item_id: String,
         user_id: String,
         onSuccess:(JSONArray)->Unit,
@@ -668,7 +729,6 @@ class AttendanceRepository(
     }
 
     override fun getMessageMoodle(
-
         user_id: String,
         type: String,
         read: String,

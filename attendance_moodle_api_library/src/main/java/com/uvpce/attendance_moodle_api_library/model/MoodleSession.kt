@@ -1,24 +1,78 @@
 package com.uvpce.attendance_moodle_api_library.model
 
-import android.util.Log
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+class MoodleSessionUser(val id:String,val firstName:String, val lastName:String):ModelBase{
+    companion object{
+        fun fromJsonObject(jsonString: String): MoodleSessionUser{
+            val jsonObject = JSONObject(jsonString)
+            return MoodleSessionUser(jsonObject.getString("id"),
+                jsonObject.getString("firstName"),
+                jsonObject.getString("lastName"))
+        }
+    }
+    override fun toJsonObject(): JSONObject {
+        val json = JSONObject()
+        json.put("id",id)
+        json.put("firstName",firstName)
+        json.put("lastName",lastName)
+        return json
+    }
 
+    override fun toString(): String {
+        return toJsonObject().toString(4)
+    }
+}
+class MoodleSessionAttendanceLog(val id:String,val studentId:String,val statusId:String,val remarks:String): ModelBase{
+    companion object{
+        fun fromJsonObject(jsonString: String): MoodleSessionAttendanceLog{
+            val jsonObject = JSONObject(jsonString)
+            return MoodleSessionAttendanceLog(
+                jsonObject.getString("id"),
+                jsonObject.getString("studentId"),
+                jsonObject.getString("statusId"),
+                jsonObject.getString("remarks")
+            )
+        }
+    }
+    override fun toJsonObject(): JSONObject {
+        val json = JSONObject()
+        json.put("id",id)
+        json.put("studentId",studentId)
+        json.put("statusId",statusId)
+        json.put("remarks",remarks)
+        return json
+    }
+    override fun toString(): String {
+        return toJsonObject().toString(4)
+    }
+}
+class MoodleSessionAttendanceCount{
+    var presentCount = 0
+    var absentCount = 0
+    var notMarked = 0
+    override fun toString(): String {
+        return "Present:$presentCount\nAbsent:$absentCount\nNotMarked:$notMarked"
+    }
+}
 class MoodleSession(val attendance: MoodleAttendance,
                     val course: MoodleCourse,
                     val group: MoodleGroup,
                     val sessionId:String,
                     val description:String,
+                    val status_set:String,
                     sessionStartDateString:String,
                     val duration:String): ModelBase
 {
+    val attendanceLog = ArrayList<MoodleSessionAttendanceLog>()
+    val userList = ArrayList<MoodleSessionUser>()
     val statusList = ArrayList<MoodleSessionStatus>()
     val durationMinutes= duration.toLong() / 60;
-    val sessionStartDate = sessionStartDateString.trim().toLong()*1000
-    val sessionEndDate = (sessionStartDateString.toLong() + duration.toLong())*1000
+    val sessionStartDate:Long = sessionStartDateString.trim().toLong()*1000
+    val sessionEndDate:Long = (sessionStartDateString.toLong() + duration.toLong())*1000
     fun getPresentStatusId():MoodleSessionStatus{
         val returnId = statusList[0]
         for(i in 0 until statusList.size){
@@ -27,9 +81,17 @@ class MoodleSession(val attendance: MoodleAttendance,
         }
         return returnId
     }
+    fun getAbsentStatusId():MoodleSessionStatus{
+        val returnId = statusList[0]
+        for(i in 0 until statusList.size){
+            if(statusList[i].name.uppercase(Locale.ROOT) == "A")
+                return statusList[i]
+        }
+        return returnId
+    }
     companion object{
         fun fromJsonObject(jsonString: String): MoodleSession {
-            Log.i(this::class.java.name, "fromJsonObject: String Input:$jsonString")
+            //Log.i(this::class.java.name, "fromJsonObject: String Input:$jsonString")
             val jsonObject = JSONObject(jsonString)
             val jsonArray = jsonObject.getJSONArray("statusList")
             val course = MoodleCourse.fromJsonObject(jsonObject.getString("course"))
@@ -41,6 +103,7 @@ class MoodleSession(val attendance: MoodleAttendance,
                 group,
                 jsonObject.getString("sessionId"),
                 jsonObject.getString("description"),
+                jsonObject.getString("status_set"),
                 jsonObject.getString("sessionStartDateString"),
                 jsonObject.getString("duration")
             )
@@ -49,6 +112,22 @@ class MoodleSession(val attendance: MoodleAttendance,
             }
             return obj
         }
+    }
+    fun getAttendanceCount():MoodleSessionAttendanceCount{
+        val objCount = MoodleSessionAttendanceCount()
+        val presentStatus = getPresentStatusId()
+        val absentStatus = getAbsentStatusId()
+        for(element in attendanceLog){
+            if(element.statusId == presentStatus.id){
+                objCount.presentCount += 1
+            }else if(element.statusId == absentStatus.id){
+                objCount.absentCount += 1
+            }
+            else{
+                objCount.notMarked += 1
+            }
+        }
+        return objCount
     }
     override fun toJsonObject(): JSONObject {
         val json = JSONObject()
@@ -62,6 +141,7 @@ class MoodleSession(val attendance: MoodleAttendance,
         json.put("group",group.toJsonObject())
         json.put("sessionId",sessionId)
         json.put("description",description)
+        json.put("status_set",status_set)
         json.put("sessionStartDateString",sessionStartDate)
         json.put("duration",duration)
         return json
@@ -69,6 +149,6 @@ class MoodleSession(val attendance: MoodleAttendance,
 
     override fun toString(): String {
         val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy hh:mm:ss a")
-        return "\nid=$sessionId \nattendanceid=${attendance.attendanceId} \ngroupid=${group.groupid} \nsessionStartDate=${simpleDateFormat.format(sessionStartDate)} \nsessionEndDate=${simpleDateFormat.format(sessionEndDate)} \nduration=$durationMinutes mins\n"
+        return "${toJsonObject().toString(4)}\nid=$sessionId \nattendanceid=${attendance.attendanceId} \ngroupid=${group.groupid} \nsessionStartDate=${simpleDateFormat.format(sessionStartDate)} \nsessionEndDate=${simpleDateFormat.format(sessionEndDate)} \nduration=$durationMinutes mins\n"
     }
 }

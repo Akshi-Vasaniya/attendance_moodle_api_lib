@@ -6,7 +6,7 @@ import org.json.JSONObject
 class MoodleGroup(val course: MoodleCourse, val groupid:String, val groupName:String): ModelBase {
     companion object{
         fun fromJsonObject(course: MoodleCourse, jsonString: String): MoodleGroup {
-            Log.i(this::class.java.name, "fromJsonObject: String Input:$jsonString")
+            //Log.i(this::class.java.name, "fromJsonObject: String Input:$jsonString")
             val jsonObject = JSONObject(jsonString)
             return MoodleGroup(
                 course,

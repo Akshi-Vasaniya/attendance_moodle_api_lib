@@ -5,6 +5,7 @@ import android.util.Log
 import com.example.guniattendancefaculty.moodle.model.*
 import com.uvpce.attendance_moodle_api_library.model.*
 import com.uvpce.attendance_moodle_api_library.util.BitmapUtils
+import com.uvpce.attendance_moodle_api_library.util.Utility
 import org.json.JSONArray
 import org.json.JSONException
 import java.nio.file.Path
@@ -215,7 +216,7 @@ class ModelRepository(
     }
     fun createSession(group: MoodleGroup,attendance: MoodleAttendance,
                       sessionStartTimeInSeconds:Long,
-                      sessionDuration:Long,
+                      sessionDuration:Long, created_by_user_id:String,
                       description:String, onReceiveData: (MoodleSession) -> Unit, onError: (String) -> Unit){
         try{
             attRepo.createSessionMoodle(
@@ -225,15 +226,13 @@ class ModelRepository(
                 duration = sessionDuration.toString(),
                 description = description,
                 group_id = group.groupid,
+                created_by_user_id = created_by_user_id,
                 onError=onError,
                 onSuccess = {
-                    onReceiveData(MoodleSession(attendance=attendance,course=group.course,group=group,
-                            sessionId = it.getJSONObject(0).getString("id"),
-                        sessionStartDateString = sessionStartTimeInSeconds.toString(),
-                        duration = sessionDuration.toString(),
-                                description = description
-                        ))
-
+                    getSessionInfo(session_id = it.getJSONObject(0).getString("id"),
+                        attendance=attendance,course=group.course,group=group, onReceiveData = {
+                            session->onReceiveData(session)
+                        }, onError = onError)
                 }
             )
         }catch (e: Exception) {
@@ -241,9 +240,9 @@ class ModelRepository(
             onError("Error:$e")
         }
     }
-    fun getSessionInformation(course: MoodleCourse, attendance: MoodleAttendance, group: MoodleGroup,
-                              onReceiveData: (List<MoodleSession>) -> Unit,
-                              onError: (String) -> Unit) {
+    fun getSessionList(course: MoodleCourse, attendance: MoodleAttendance, group: MoodleGroup,
+                       onReceiveData: (List<MoodleSession>) -> Unit,
+                       onError: (String) -> Unit, needUserList:Boolean = false) {
         try {
             attRepo.getSessionsListMoodle(attendance.attendanceId, onError = { result ->
                 onError(result)
@@ -258,6 +257,7 @@ class ModelRepository(
                                 attendance, course, group,
                                 result.getJSONObject(i).getString("id"),
                                 result.getJSONObject(i).getString("description"),
+                                result.getJSONObject(i).getString("statusset"),
                                 result.getJSONObject(i).getString("sessdate"),
                                 result.getJSONObject(i).getString("duration")
                             )
@@ -274,6 +274,30 @@ class ModelRepository(
                                     )
                                 )
                             }
+                            if(needUserList){
+                                val userList = result.getJSONObject(i).getJSONArray("users")
+                                for (j in 0 until userList.length()) {
+                                    obj.userList.add(
+                                        MoodleSessionUser(
+                                            id = userList.getJSONObject(j).getString("id"),
+                                            firstName = userList.getJSONObject(j).getString("firstname"),
+                                            lastName = userList.getJSONObject(j)
+                                                .getString("lastname")
+                                        )
+                                    )
+                                }
+                            }
+                            val attendanceLog = result.getJSONObject(i).getJSONArray("attendance_log")
+                            for (j in 0 until attendanceLog.length()) {
+                                obj.attendanceLog.add(
+                                    MoodleSessionAttendanceLog(
+                                        id = attendanceLog.getJSONObject(j).getString("id"),
+                                        studentId = attendanceLog.getJSONObject(j).getString("studentid"),
+                                        statusId = attendanceLog.getJSONObject(j).getString("statusid"),
+                                        remarks = attendanceLog.getJSONObject(j).getString("remarks"),
+                                    )
+                                )
+                            }
                             sessionList.add(obj)
                         }
                     } catch (e: JSONException) {
@@ -285,6 +309,75 @@ class ModelRepository(
             }
             )
         } catch (e: Exception) {
+            Log.e("Exception", "$e",e)
+            onError("Error:$e")
+        }
+    }
+    fun getSessionInfo(session_id:String,
+                       course: MoodleCourse,
+                       attendance: MoodleAttendance,
+                       group: MoodleGroup,
+                       onReceiveData: (MoodleSession) -> Unit,
+                       onError: (String) -> Unit){
+        try{
+            attRepo.getSessionMoodle(session_id, onSuccess = {result->
+                try {
+                    val groupId = result.getInt("groupid")
+                    if (groupId == group.groupid.toInt()) {
+                        val obj = MoodleSession(
+                            attendance, course, group,
+                            result.getString("id"),
+                            result.getString("description"),
+                            result.getString("statusset"),
+                            result.getString("sessdate"),
+                            result.getString("duration")
+                        )
+                        val statusList = result.getJSONArray("statuses")
+                        for (j in 0 until statusList.length()) {
+                            obj.statusList.add(
+                                MoodleSessionStatus(
+                                    session = obj,
+                                    id = statusList.getJSONObject(j).getString("id"),
+                                    name = statusList.getJSONObject(j).getString("acronym"),
+                                    description = statusList.getJSONObject(j)
+                                        .getString("description"),
+                                    grade = statusList.getJSONObject(j).getInt("grade")
+                                )
+                            )
+                        }
+
+                        val userList = result.getJSONArray("users")
+                        for (j in 0 until userList.length()) {
+                            obj.userList.add(
+                                MoodleSessionUser(
+                                    id = userList.getJSONObject(j).getString("id"),
+                                    firstName = userList.getJSONObject(j).getString("firstname"),
+                                    lastName = userList.getJSONObject(j)
+                                        .getString("lastname")
+                                )
+                            )
+                        }
+
+                        val attendanceLog = result.getJSONArray("attendance_log")
+                        for (j in 0 until attendanceLog.length()) {
+                            obj.attendanceLog.add(
+                                MoodleSessionAttendanceLog(
+                                    id = attendanceLog.getJSONObject(j).getString("id"),
+                                    studentId = attendanceLog.getJSONObject(j)
+                                        .getString("studentid"),
+                                    statusId = attendanceLog.getJSONObject(j).getString("statusid"),
+                                    remarks = attendanceLog.getJSONObject(j).getString("remarks"),
+                                )
+                            )
+                        }
+                        onReceiveData(obj)
+                    }
+                } catch (e: JSONException) {
+                    Log.e(TAG, "getSessionInformation: $e", e)
+                    onError("Error: $e")
+                }
+            },onError=onError)
+        }catch (e: Exception) {
             Log.e("Exception", "$e",e)
             onError("Error:$e")
         }
@@ -344,23 +437,36 @@ class ModelRepository(
             onError("Error:$e")
         }
     }
+    private fun verifyStudent(data:QRMessageData):Boolean{
+        val current = Utility().getCurrenMillis()
+        if(data.session.sessionStartDate <= current  && data.session.sessionEndDate >= current){
+            if(data.attendanceStartDate <= current && data.attendanceEndDate >= current){
+                return true
+            }
+        }
+        return false
+    }
     fun takePresentAttendance(scannedQRStringResponse:String,
-                       enrollmentNo: String,
-                       onSuccess:(JSONArray)->Unit,
+                       student_user_id: String,
+                       onSuccess:(Boolean)->Unit,
                        onError:(String)->Unit){
         try{
         QRMessageData.getQRMessageObject(scannedQRStringResponse,
             onSuccess={
                         val status = it.session.getPresentStatusId()
-                        attRepo.takeAttendanceMoodle(
-                          session_id = it.session.sessionId,
-                          student_id = enrollmentNo,
-                          taken_by_id = it.attendanceByFacultyId,
-                          status_id = status.id,
-                          status_set = status.name,
-                          onSuccess = onSuccess,
-                          onError = onError
-                      )
+                        if(verifyStudent(it)) {
+                            attRepo.takeAttendanceMoodle(
+                                session_id = it.session.sessionId,
+                                student_id = student_user_id,
+                                taken_by_id = it.attendanceByFacultyId,
+                                status_id = status.id,
+                                status_set = status.name,
+                                onSuccess = onSuccess,
+                                onError = onError
+                            )
+                        }else{
+                            onError("Time Out for Attendance")
+                        }
             },
             onError={
                 onError(it)
