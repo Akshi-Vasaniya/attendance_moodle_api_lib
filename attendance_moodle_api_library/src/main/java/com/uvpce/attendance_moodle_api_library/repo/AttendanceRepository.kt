@@ -37,6 +37,7 @@ class AttendanceRepository(
         return "$MoodleURL/login/token.php"
     }
 
+
     override fun getUserInfoMoodle(username: String,onSuccess:(JSONArray)->Unit,
                                    onError:(String)->Unit) {
 
@@ -283,6 +284,7 @@ class AttendanceRepository(
         attendance_id:String,
         session_time:String,
         duration:String,
+        description:String,
         group_id:String,
         onSuccess:(JSONArray)->Unit,
         onError:(String)->Unit
@@ -349,6 +351,7 @@ class AttendanceRepository(
                 params["moodlewsrestformat"] = "json"
                 params["attendanceid"]= attendance_id
                 params["sessiontime"] = session_time
+                params["description"] = description
                 params["duration"] = duration
                 params["groupid"] = group_id
                 return params

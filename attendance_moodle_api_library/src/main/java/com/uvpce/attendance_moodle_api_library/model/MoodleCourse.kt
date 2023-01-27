@@ -1,5 +1,6 @@
 package com.uvpce.attendance_moodle_api_library.model
 
+import android.util.Log
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -8,6 +9,7 @@ class MoodleCourse(val id:String,val Name:String,val userName:String): ModelBase
     val sessionList:ArrayList<MoodleSession> = ArrayList();
     companion object{
         fun fromJsonObject(jsonString: String): MoodleCourse {
+            Log.i(this::class.java.name, "fromJsonObject: String Input:$jsonString")
             val jsonObject = JSONObject(jsonString)
             val jsonArray = jsonObject.getJSONArray("groupList")
             val obj = MoodleCourse(

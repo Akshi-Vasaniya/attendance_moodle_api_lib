@@ -19,7 +19,10 @@ import com.uvpce.attendance_moodle_api_library.*
 import com.uvpce.attendance_moodle_api_library.model.MoodleAttendance
 import com.uvpce.attendance_moodle_api_library.model.MoodleAttendanceBulk
 import com.uvpce.attendance_moodle_api_library.model.MoodleCourse
+import com.uvpce.attendance_moodle_api_library.model.QRMessageData
 import com.uvpce.attendance_moodle_api_library.repo.AttendanceRepository
+import com.uvpce.attendance_moodle_api_library.util.Utility
+import kotlinx.coroutines.selects.selectUnbiased
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -45,11 +48,15 @@ class MainActivity : AppCompatActivity() {
             val i = (Date().time / 1000).toInt()
             var string = ""
             modelRepo.getCourseListEnrolledByUser("admin",{ courseList->
-                    string += "\nCourses:"+courseList.joinToString("\n")
-                    val selectedCourse = courseList[0]
+                    //string += "\nCourses:"+courseList.joinToString("\n")
+                    val selectedCourse = courseList[5]
                     modelRepo.getGroupList(selectedCourse, onReceiveData = {
                     //string += "Groups:"+groupList.joinToString("\n")
-                        string +="\nSelected Course = $selectedCourse\n"
+                        Log.i("MainActivity", "onCreate: Selected Course:$selectedCourse")
+                        string +="\n\nSelected Course = $selectedCourse\n"
+                        val selectedGroup = selectedCourse.groupList[1]
+                        Log.i("MainActivity", "onCreate: Selected Course:$selectedGroup")
+                        string +="\n\nSelected Group = $selectedCourse\n"
                         //Test Login
                         modelRepo.login("20012011061","abc",
                             onSuccess = {
@@ -57,13 +64,59 @@ class MainActivity : AppCompatActivity() {
                                     string += "login success\n"
                                 else
                                     string += "invalid login\n"
-
                                         modelRepo.getAttendance(courseList[5], onReceiveData = {attendance->
-                                        string += attendance.toString()
-                                        Log.i("MainActivity", "onCreate: ${attendance.toString()}")
-                                        tv1.text = string
-                                    }, onError = {
+                                            string += "\nAttendance:\n$attendance\n"
+                                            Log.i("MainActivity", "onCreate: ${attendance.toString()}")
+                                            modelRepo.getSessionInformation(selectedCourse,attendance,selectedGroup, onError = {}, onReceiveData = {sessionList->
+                                                string += "\n"+sessionList.joinToString("\n")
+                                                val selectedSession = sessionList[0]
+                                                modelRepo.getQRDataString(
+                                                    QRMessageData(
+                                                        session = selectedSession,"hms","hms",
+                                                        "xyzlat","xyzlong",
+                                                        Utility().getSeconds(10,50),Utility().getSeconds(11,0),
+                                                        Utility().getDurationInSeconds(0,10)
+                                                    ),
+                                                    onSuccess = {
+                                                        qrString->
+                                                        string+= "\n\nQR String:$qrString\n\n"
+                                                        val enrollMentNo = "20012021076"
+                                                        modelRepo.takePresentAttendance(qrString,enrollMentNo, onSuccess = {
+                                                            jsonResult->
+                                                            string+="\nFor Enrollment No:$enrollMentNo ${jsonResult.toString(4)}\n"
+                                                            tv1.text = string
+                                                        }, onError = {error->
+                                                            Log.i(
+                                                                "MainActivity",
+                                                                "onCreate: takePresentAttendance:$error"
+                                                            )
+                                                            tv1.text =
+                                                                "$string\nError:: takePresentAttendance:$error"
+                                                        }
+                                                        )
 
+                                                    },
+                                                    onError = {}
+                                                )
+
+                                            })
+                                            /*modelRepo.createSession(selectedGroup,attendance,
+                                            sessionStartTimeInSeconds = Utility().getSeconds(11,0)
+                                            , sessionDuration = Utility().getDurationInSeconds(0,50),
+                                                description = "Session taken by HMS",
+                                                onError = {resultError->
+                                                    Log.i("MainActivity", "onCreate: Error:$resultError")
+
+                                                },
+                                                onReceiveData = {
+                                                    session->
+                                                    string += "\nSession:\n$session\n"
+                                                    tv1.text = string
+                                                }
+                                            )*/
+                                    }, onError = {resultError->
+
+                                            Log.e("MainActivity", "onCreate: $resultError")
                                     })
                                 /*MoodleAttendanceBulk(modelRepo,courseList).
                                 createAttendanceInBulk(onSuccess = {attendanceList->

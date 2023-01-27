@@ -1,11 +1,13 @@
 package com.uvpce.attendance_moodle_api_library.model
 
+import android.util.Log
 import com.uvpce.attendance_moodle_api_library.repo.ModelRepository
 import org.json.JSONObject
 
 class MoodleAttendance(val course: MoodleCourse, val attendanceId:String, val attendanceName:String):ModelBase {
     companion object{
         fun fromJsonObject(jsonString: String):MoodleAttendance {
+            Log.i(this::class.java.name, "fromJsonObject: String Input:$jsonString")
             val jsonObject = JSONObject(jsonString)
             return MoodleAttendance(
                 MoodleCourse.fromJsonObject(jsonObject.getString("course")),

@@ -68,7 +68,7 @@ interface iAttendanceRepository {
      * @return session id - JSONArray
      * @see <a href="https://github.com/dhavanikgithub/attendance_moodle_api_lib/blob/master/functions%20response/createSessionMoodle.txt">Sample Response</a>
      */
-    fun createSessionMoodle(course_id:String,attendance_id:String, session_time:String, duration:String, group_id:String, onSuccess:(JSONArray)->Unit,
+    fun createSessionMoodle(course_id:String,attendance_id:String, session_time:String, duration:String,description:String, group_id:String, onSuccess:(JSONArray)->Unit,
                             onError:(String)->Unit)
 
     /**

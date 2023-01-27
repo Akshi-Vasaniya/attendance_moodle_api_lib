@@ -1,5 +1,6 @@
 package com.uvpce.attendance_moodle_api_library.model
 
+import android.util.Log
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -28,13 +29,16 @@ class MoodleSession(val attendance: MoodleAttendance,
     }
     companion object{
         fun fromJsonObject(jsonString: String): MoodleSession {
+            Log.i(this::class.java.name, "fromJsonObject: String Input:$jsonString")
             val jsonObject = JSONObject(jsonString)
             val jsonArray = jsonObject.getJSONArray("statusList")
             val course = MoodleCourse.fromJsonObject(jsonObject.getString("course"))
+            val attendance = MoodleAttendance.fromJsonObject(jsonObject.getString("attendance"))
+            val group = MoodleGroup.fromJsonObject(course,jsonObject.getString("group"))
             val obj = MoodleSession(
-                MoodleAttendance.fromJsonObject(jsonObject.getString("attendance")),
+                attendance,
                 course,
-                MoodleGroup.fromJsonObject(course,jsonObject.getString("group")),
+                group,
                 jsonObject.getString("sessionId"),
                 jsonObject.getString("description"),
                 jsonObject.getString("sessionStartDateString"),

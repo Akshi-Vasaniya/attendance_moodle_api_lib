@@ -1,6 +1,7 @@
 package com.uvpce.attendance_moodle_api_library.model
 
 import android.util.Base64
+import android.util.Log
 import org.json.JSONObject
 
 class QRMessageData(
@@ -50,9 +51,11 @@ class QRMessageData(
                                onError:(String)->Unit)
         {
             try {
-                onSuccess(QRMessageData.fromJsonObject(String(Base64.decode(QrCodeMessage,Base64.DEFAULT))))
+                val jsonString = String(Base64.decode(QrCodeMessage,Base64.DEFAULT))
+                Log.i(this::class.java.name, "getQRMessageObject: String Input:$jsonString")
+                onSuccess(QRMessageData.fromJsonObject(jsonString))
             }
-            catch (e:java.lang.Exception){
+            catch (e:Exception){
                 onError("Errors: ${e}")
             }
         }

@@ -6,8 +6,41 @@ import android.os.StrictMode
 import android.util.Base64
 import java.io.ByteArrayOutputStream
 import java.net.URL
+import java.text.SimpleDateFormat
+import java.util.*
 
 class Utility {
+    fun getCurrenDateTime():String{
+        val cal = Calendar.getInstance()
+        val df = SimpleDateFormat("dd-MM-yyyy hh:mm a")
+        return df.format(cal.time)
+    }
+    fun getMillis(hour:Int, min:Int):Long{
+        val setCalc = Calendar.getInstance()
+        setCalc[Calendar.HOUR_OF_DAY] = hour
+        setCalc[Calendar.MINUTE] = min
+        setCalc[Calendar.SECOND] = 0
+        return setCalc.timeInMillis
+    }
+    fun getDurationInSeconds(hour:Int, min:Int):Long{
+        return hour * 60 * 60 + min * 60.toLong()
+    }
+    fun getSeconds(hour:Int, min:Int):Long{
+        return getMillis(hour,min)/1000
+    }
+    fun getMillis(date:Int, month:Int, year:Int,hour:Int, min:Int):Long{
+        val setCalc = Calendar.getInstance()
+        setCalc[Calendar.DATE] = date
+        setCalc[Calendar.MONTH] = month
+        setCalc[Calendar.YEAR] = year
+        setCalc[Calendar.HOUR_OF_DAY] = hour
+        setCalc[Calendar.MINUTE] = min
+        setCalc[Calendar.SECOND] = 0
+        return setCalc.timeInMillis
+    }
+    fun getSeconds(date:Int, month:Int, year:Int,hour:Int, min:Int):Long{
+        return getMillis(date,month,year,hour,min)/1000
+    }
     fun convertUrlToBase64(url: String): String {
         val newurl: URL
         val bitmap: Bitmap

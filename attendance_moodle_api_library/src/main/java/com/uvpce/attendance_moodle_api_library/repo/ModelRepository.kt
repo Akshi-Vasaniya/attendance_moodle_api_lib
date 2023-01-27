@@ -49,7 +49,7 @@ class ModelRepository(
                         onReceive(false)
                     }
                 } catch (e: Exception){
-                    Log.i("Exception", "$e")
+                    Log.e("Exception", "$e",e)
                     onError("Error:$e")
                 }
             },onError={result->
@@ -58,7 +58,7 @@ class ModelRepository(
             }
             )
         }catch (e:Exception){
-            Log.i("Exception", "$e")
+            Log.e("Exception", "$e",e)
             onError("Error:$e")
         }
     }
@@ -79,7 +79,7 @@ class ModelRepository(
 
         )
         }catch (e:Exception){
-            Log.i("Exception", "$e")
+            Log.e("Exception", "$e",e)
             onError("Error:$e")
         }
     }
@@ -130,7 +130,7 @@ class ModelRepository(
                 }
             )
         } catch (e: Exception) {
-            Log.i("Exception", "$e")
+            Log.e("Exception", "$e",e)
             onError("Error:$e")
         }
     }
@@ -153,7 +153,7 @@ class ModelRepository(
             }
             )
         } catch (e: Exception) {
-            Log.i("Exception", "$e")
+            Log.e("Exception", "$e",e)
             onError("Error:$e")
         }
     }
@@ -184,7 +184,7 @@ class ModelRepository(
             }
         )
     } catch (e: Exception) {
-        Log.i("Exception", "$e")
+        Log.e("Exception", "$e",e)
         onError("Error:$e")
     }
     }
@@ -209,7 +209,35 @@ class ModelRepository(
                 }
             )
         } catch (e: Exception) {
-            Log.i("Exception", "$e")
+            Log.e("Exception", "$e",e)
+            onError("Error:$e")
+        }
+    }
+    fun createSession(group: MoodleGroup,attendance: MoodleAttendance,
+                      sessionStartTimeInSeconds:Long,
+                      sessionDuration:Long,
+                      description:String, onReceiveData: (MoodleSession) -> Unit, onError: (String) -> Unit){
+        try{
+            attRepo.createSessionMoodle(
+                course_id = group.course.id,
+                attendance_id = attendance.attendanceId,
+                session_time = sessionStartTimeInSeconds.toString(),
+                duration = sessionDuration.toString(),
+                description = description,
+                group_id = group.groupid,
+                onError=onError,
+                onSuccess = {
+                    onReceiveData(MoodleSession(attendance=attendance,course=group.course,group=group,
+                            sessionId = it.getJSONObject(0).getString("id"),
+                        sessionStartDateString = sessionStartTimeInSeconds.toString(),
+                        duration = sessionDuration.toString(),
+                                description = description
+                        ))
+
+                }
+            )
+        }catch (e: Exception) {
+            Log.e("Exception", "$e",e)
             onError("Error:$e")
         }
     }
@@ -257,11 +285,11 @@ class ModelRepository(
             }
             )
         } catch (e: Exception) {
-            Log.i("Exception", "$e")
+            Log.e("Exception", "$e",e)
             onError("Error:$e")
         }
     }
-    fun getFacultyInformation(userName: String, onReceiveData: (List<MoodleUserInfo>) -> Unit, onError: (String) -> Unit){
+    private fun getFacultyInformation(userName: String, onReceiveData: (List<MoodleUserInfo>) -> Unit, onError: (String) -> Unit){
         try{
         attRepo.getFacultyInfoMoodle(userName,onError={result->
                 onError(result)
@@ -285,7 +313,7 @@ class ModelRepository(
             }
         )
     } catch (e: Exception) {
-        Log.i("Exception", "$e")
+        Log.e("Exception", "$e",e)
         onError("Error:$e")
     }
     }
@@ -298,7 +326,7 @@ class ModelRepository(
             val attendanceId = courseAttendance.getString("id")
             onReceiveData(MoodleAttendance(course, attendanceId, attendanceName))
         } catch (e: Exception) {
-            Log.i("Exception", "$e")
+            Log.e("Exception", "$e",e)
             onError("Error:$e")
         }
     }
@@ -312,7 +340,7 @@ class ModelRepository(
         try{
         QRMessageData.getQRMessageString(data,onSuccess,onError)
         } catch (e: Exception) {
-            Log.i("Exception", "$e")
+            Log.e("Exception", "$e",e)
             onError("Error:$e")
         }
     }
@@ -338,7 +366,7 @@ class ModelRepository(
                 onError(it)
             })
         } catch (e: Exception) {
-            Log.i("Exception", "$e")
+            Log.e("Exception", "$e",e)
             onError("Error:$e")
         }
     }
